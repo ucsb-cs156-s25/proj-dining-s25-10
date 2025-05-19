@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 export default function MenuItemTable({ menuItems, currentUser }) {
   const testid = "MenuItemTable";
   const navigate = useNavigate();
-
-  const reviewCallback = async (_cell) => {
-    const id = _cell.row.original.id;
-    navigate('/reviews/${id}')
+  
+  // Update the reviewCallback to navigate to the reviews page
+  const reviewCallback = (_cell) => {
+    navigate(`/reviews/${_cell.row.original.id}`);
   };
-
+  
   const columns = [
     {
       Header: "Item Name",

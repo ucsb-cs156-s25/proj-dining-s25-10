@@ -70,6 +70,9 @@ export default function AppNavbar({
                   <Nav.Link as={Link} to="/placeholder">
                     Placeholder
                   </Nav.Link>
+                  <Nav.Link as={Link} to="/reviews/:itemid">
+                    Reviews
+                  </Nav.Link>
                   <Nav.Link as={Link} to="/myreviews">
                     My Reviews
                   </Nav.Link>
