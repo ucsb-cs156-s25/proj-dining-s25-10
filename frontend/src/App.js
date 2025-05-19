@@ -19,6 +19,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import "react-toastify/dist/ReactToastify.css";
 import MenuItemPage from "main/pages/MenuItem/MenuItemPage";
 
+import PlaceHolderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
+
 function App() {
   const { data: currentUser } = useCurrentUser();
 
@@ -33,6 +35,7 @@ function App() {
         {hasRole(currentUser, "ROLE_USER") && (
           <>
             <Route exact path="/myreviews" element={<MyReviewsIndexPage />} />
+            <Route exact path="/reviews/:itemid" element={<PlaceHolderReviewsPage />} />
           </>
         )}
         {hasRole(currentUser, "ROLE_ADMIN") && (
