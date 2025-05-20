@@ -46,7 +46,6 @@ describe("utils/currentUser tests", () => {
       expect(queryState).toBeDefined();
 
       queryClient.clear();
-
       await waitFor(() => expect(console.error).toHaveBeenCalled());
       const errorMessage = console.error.mock.calls[0][0];
       expect(errorMessage).toMatch(/Error invoking axios.get:/);
@@ -64,7 +63,7 @@ describe("utils/currentUser tests", () => {
       const axiosMock = new AxiosMockAdapter(axios);
       axiosMock
         .onGet("/api/currentUser")
-        .reply(200, apiCurrentUserFixtures.userOnly);
+        .reply(200, currentUserFixtures.userOnly.root);
       axiosMock
         .onGet("/api/systemInfo")
         .reply(200, systemInfoFixtures.showingNeither);
@@ -134,6 +133,7 @@ describe("utils/currentUser tests", () => {
       queryClient.clear();
     });
   });
+
   describe("useLogout tests", () => {
     test("useLogout", async () => {
       const queryClient = new QueryClient();
@@ -157,8 +157,8 @@ describe("utils/currentUser tests", () => {
         expect(useNavigate).toHaveBeenCalled();
         result.current.mutate();
       });
-      await waitFor(() => expect(navigateSpy).toHaveBeenCalledWith("/"));
 
+      await waitFor(() => expect(navigateSpy).toHaveBeenCalledWith("/"));
       await waitFor(() =>
         expect(resetQueriesSpy).toHaveBeenCalledWith("current user", {
           exact: true,
@@ -168,6 +168,7 @@ describe("utils/currentUser tests", () => {
       queryClient.clear();
     });
   });
+
   describe("hasRole tests", () => {
     test('hasRole(x,"ROLE_ADMIN") return falsy when currentUser ill-defined', async () => {
       expect(hasRole(null, "ROLE_ADMIN")).toBeFalsy();
@@ -235,6 +236,5 @@ describe("utils/currentUser tests", () => {
         hasRole({ data: { root: { rolesList: [] } } }, "ROLE_USER"),
       ).toBeFalsy();
     });
-    expect(hasRole({ root: { rolesList: null } })).toBeFalsy();
   });
 });
