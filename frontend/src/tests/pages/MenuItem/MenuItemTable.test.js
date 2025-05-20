@@ -1,14 +1,34 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import MenuItemTable from "main/components/MenuItem/MenuItemTable";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { MemoryRouter } from "react-router-dom";
 
 const mockedNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockedNavigate,
-}));
+jest.mock("react-router-dom", () => {
+  const originalModule = jest.requireActual("react-router-dom");
+  return {
+    ...originalModule,
+    useNavigate: () => mockedNavigate,
+  };
+});
+
+jest.mock("main/utils/currentUser", () => {
+  return {
+    hasRole: (user, role) => {
+      if (
+        role === "ROLE_USER" &&
+        user?.root?.user?.roles?.includes("ROLE_USER")
+      ) {
+        return true;
+      }
+      return false;
+    },
+  };
+});
 
 describe("MenuItemTable tests", () => {
+  const queryClient = new QueryClient();
+
   const menuItems = [
     {
       id: 1,
@@ -24,9 +44,11 @@ describe("MenuItemTable tests", () => {
 
   test("renders without crashing for empty table with no user", () => {
     render(
-      <MemoryRouter>
-        <MenuItemTable menuItems={[]} currentUser={{}} />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <MenuItemTable menuItems={[]} currentUser={{}} />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     expect(screen.getByText("Item Name")).toBeInTheDocument();
@@ -35,31 +57,37 @@ describe("MenuItemTable tests", () => {
 
   test("renders Review Item button for users with ROLE_USER", () => {
     render(
-      <MemoryRouter>
-        <MenuItemTable
-          menuItems={menuItems}
-          currentUser={{ root: { user: { roles: ["ROLE_USER"] } } }}
-        />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <MenuItemTable
+            menuItems={menuItems}
+            currentUser={{ root: { user: { roles: ["ROLE_USER"] } } }}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
-    const buttonCells = screen.getAllByTestId(
-      /MenuItemTable-cell-row-\d+-button-Review Item/,
+    const cells = screen.getAllByTestId(
+      /MenuItemTable-cell-row-\d+-col-Review Item-button/,
     );
-    expect(buttonCells.length).toBe(2);
+    expect(cells.length).toBe(2);
   });
 
   test("clicking review button navigates to correct URL", () => {
     render(
-      <MemoryRouter>
-        <MenuItemTable
-          menuItems={menuItems}
-          currentUser={{ root: { user: { roles: ["ROLE_USER"] } } }}
-        />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <MenuItemTable
+            menuItems={menuItems}
+            currentUser={{ root: { user: { roles: ["ROLE_USER"] } } }}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
-    const buttons = screen.getAllByRole("button", { name: "Review Item" });
+    const buttons = screen.getAllByTestId(
+      /MenuItemTable-cell-row-\d+-col-Review Item-button/,
+    );
     fireEvent.click(buttons[0]);
 
     expect(mockedNavigate).toHaveBeenCalledWith("/reviews/1");

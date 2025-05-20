@@ -1,23 +1,23 @@
-// src/tests/pages/Placeholder/PlaceholderReviewsPage.test.js
 import { render, screen } from "@testing-library/react";
-import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
 
-// Mock the useParams hook instead of trying to use Routes
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: () => ({
     itemid: "1",
   }),
-  BrowserRouter: ({ children }) => <div>{children}</div>,
+  Link: ({ children }) => <div>{children}</div>,
 }));
 
 describe("PlaceholderReviewsPage tests", () => {
+  const queryClient = new QueryClient();
+
   test("renders without crashing", () => {
     render(
-      <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <PlaceholderReviewsPage />
-      </BrowserRouter>,
+      </QueryClientProvider>,
     );
 
     expect(screen.getByText(/Reviews for Menu Item 1/)).toBeInTheDocument();
