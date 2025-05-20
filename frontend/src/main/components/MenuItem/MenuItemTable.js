@@ -19,18 +19,18 @@ export default function MenuItemTable({ menuItems, currentUser }) {
       Header: "Station",
       accessor: "station",
     },
+    {
+      Header: () => (
+        <span data-testid="MenuItemTable-header-Reviews">Reviews</span>
+      ),
+      accessor: "id",
+      Cell: ({ value }) => <Link to={`/reviews/${value}`}>View</Link>,
+    },
   ];
-
-  const reviewLinkColumn = {
-    Header: "Reviews",
-    accessor: "id",
-    Cell: ({ value }) => <Link to={`/reviews/${value}`}>View</Link>,
-  };
 
   if (hasRole(currentUser, "ROLE_USER")) {
     columns.push(
       ButtonColumn("Review Item", "warning", reviewCallback, testid),
-      reviewLinkColumn,
     );
   }
 
