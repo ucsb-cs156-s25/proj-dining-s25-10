@@ -1,64 +1,79 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { createMemoryHistory } from "history";
+import { Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import MenuItemTable from "main/components/MenuItem/MenuItemTable";
 import { menuItemFixtures } from "fixtures/menuItemFixtures";
 import { currentUserFixtures } from "fixtures/currentUserFixtures";
 
-const mockedNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockedNavigate,
-}));
-
 describe("MenuItemTable", () => {
   const queryClient = new QueryClient();
 
-  test("renders menu items with buttons for ROLE_USER", () => {
+  function renderWithHistory(menuItems, currentUser) {
+    const history = createMemoryHistory();
     render(
       <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MenuItemTable
-            menuItems={menuItemFixtures.fiveMenuItems}
-            currentUser={currentUserFixtures.userOnly}
-          />
-        </MemoryRouter>
+        <Router location={history.location} navigator={history}>
+          <MenuItemTable menuItems={menuItems} currentUser={currentUser} />
+        </Router>
       </QueryClientProvider>,
     );
+    return history;
+  }
 
-    expect(screen.getAllByText("Review Item").length).toBe(5);
+  test("renders headers and menu items correctly without buttons (non-logged-in)", () => {
+    renderWithHistory(
+      menuItemFixtures.fiveMenuItems,
+      currentUserFixtures.notLoggedIn,
+    );
+
+    expect(screen.getByText("Item Name")).toBeInTheDocument();
+    expect(screen.getByText("Station")).toBeInTheDocument();
+
+    for (let i = 0; i < menuItemFixtures.fiveMenuItems.length; i++) {
+      expect(
+        screen.getByTestId(`MenuItemTable-cell-row-${i}-col-name`),
+      ).toHaveTextContent(menuItemFixtures.fiveMenuItems[i].name);
+      expect(
+        screen.getByTestId(`MenuItemTable-cell-row-${i}-col-station`),
+      ).toHaveTextContent(menuItemFixtures.fiveMenuItems[i].station);
+    }
+
+    expect(
+      screen.queryByRole("button", { name: /review item/i }),
+    ).not.toBeInTheDocument();
   });
 
-  test("clicking review button navigates to review page", async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MenuItemTable
-            menuItems={[{ ...menuItemFixtures.oneMenuItem[0], id: 42 }]}
-            currentUser={currentUserFixtures.userOnly}
-          />
-        </MemoryRouter>
-      </QueryClientProvider>,
+  test("renders review buttons for ROLE_USER only", () => {
+    renderWithHistory(
+      menuItemFixtures.fiveMenuItems,
+      currentUserFixtures.userOnly,
     );
 
-    fireEvent.click(screen.getByText("Review Item"));
-    await waitFor(() =>
-      expect(mockedNavigate).toHaveBeenCalledWith("/reviews/42"),
-    );
+    const buttons = screen.getAllByRole("button", { name: /review item/i });
+    expect(buttons).toHaveLength(5);
   });
 
-  test("no buttons for non-logged in users", () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MenuItemTable
-            menuItems={menuItemFixtures.oneMenuItem}
-            currentUser={currentUserFixtures.notLoggedIn}
-          />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
+  test("clicking review button navigates to correct review page", async () => {
+    const itemWithId = [{ ...menuItemFixtures.oneMenuItem[0], id: 42 }];
+    const view = renderWithHistory(itemWithId, currentUserFixtures.userOnly);
+    const history = view.history;
 
-    expect(screen.queryByText("Review Item")).not.toBeInTheDocument();
+    const button = screen.getByRole("button", { name: /review item/i });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(history.location.pathname).toBe("/reviews/42");
+    });
+  });
+
+  test("does not render buttons for unauthenticated users", () => {
+    renderWithHistory(
+      menuItemFixtures.oneMenuItem,
+      currentUserFixtures.notLoggedIn,
+    );
+    expect(
+      screen.queryByRole("button", { name: /review item/i }),
+    ).not.toBeInTheDocument();
   });
 });
