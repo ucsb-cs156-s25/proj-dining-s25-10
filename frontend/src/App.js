@@ -6,6 +6,9 @@ import AdminUsersPage from "main/pages/AdminUsersPage";
 import PlaceholderIndexPage from "main/pages/Placeholder/PlaceholderIndexPage";
 import PlaceholderCreatePage from "main/pages/Placeholder/PlaceholderCreatePage";
 import PlaceholderEditPage from "main/pages/Placeholder/PlaceholderEditPage";
+import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
+
+import PlaceholderReviewsIndexPage from "main/pages/Reviews/PlaceholderReviewsIndexPage";
 
 import MyReviewsIndexPage from "main/pages/MyReviews/MyReviewsIndexPage";
 
@@ -59,6 +62,13 @@ function App() {
               path="/placeholder/create"
               element={<PlaceholderCreatePage />}
             />
+            <Route
+              path="/reviews/:itemid"
+              element={<PlaceholderReviewsPage />}
+            />
+            <Route
+              path="/placeholder/reviews"
+              element={<PlaceholderReviewsIndexPage />} />
           </>
         )}
         <>
