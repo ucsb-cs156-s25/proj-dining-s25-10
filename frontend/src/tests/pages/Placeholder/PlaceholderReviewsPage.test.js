@@ -1,21 +1,15 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { MemoryRouter, Routes, Route } from "react-router-dom";
-import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
+import PlaceholderReviewsPage from "main/pages/MenuItem/PlaceholderReviewsPage";
 
-jest.mock("main/layouts/BasicLayout/BasicLayout", () => {
-  return function MockBasicLayout({ children }) {
-    return <div data-testid="MockBasicLayout">{children}</div>;
-  };
-});
-
-describe("PlaceholderReviewsPage tests", () => {
+describe("PlaceholderReviewsPage", () => {
   const queryClient = new QueryClient();
 
-  test("renders without crashing", () => {
+  test("renders correctly with itemid param", () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={["/reviews/1"]}>
+        <MemoryRouter initialEntries={["/reviews/123"]}>
           <Routes>
             <Route
               path="/reviews/:itemid"
@@ -26,8 +20,7 @@ describe("PlaceholderReviewsPage tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByTestId("MockBasicLayout")).toBeInTheDocument();
-    expect(screen.getByText(/Reviews for Menu Item 1/)).toBeInTheDocument();
-    expect(screen.getByText(/Coming Soon!/)).toBeInTheDocument();
+    expect(screen.getByText("Reviews for Menu Item 123")).toBeInTheDocument();
+    expect(screen.getByText("Coming Soon!")).toBeInTheDocument();
   });
 });

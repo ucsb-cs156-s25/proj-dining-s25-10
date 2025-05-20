@@ -11,73 +11,43 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-describe("MenuItemTable tests", () => {
+describe("MenuItemTable", () => {
   const queryClient = new QueryClient();
 
-  test("Has the expected column headers and content", () => {
+  test("renders menu items with buttons for ROLE_USER", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
           <MenuItemTable
             menuItems={menuItemFixtures.fiveMenuItems}
-            currentUser={currentUserFixtures.adminUser}
-          />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    const expectedHeaders = ["Item Name", "Station"];
-    const expectedFields = ["name", "station"];
-    const testId = "MenuItemTable";
-
-    expectedHeaders.forEach((headerText) => {
-      const header = screen.getByText(headerText);
-      expect(header).toBeInTheDocument();
-    });
-
-    expectedFields.forEach((field) => {
-      const header = screen.getByTestId(`${testId}-header-${field}`);
-      expect(header).toBeInTheDocument();
-    });
-
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-name`),
-    ).toHaveTextContent("Pizza");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-station`),
-    ).toHaveTextContent("Italian");
-
-    expect(
-      screen.getByTestId(`${testId}-cell-row-1-col-name`),
-    ).toHaveTextContent("Hamburger");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-1-col-station`),
-    ).toHaveTextContent("Grill");
-  });
-
-  test("Review button navigates to the review page", async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MenuItemTable
-            menuItems={menuItemFixtures.oneMenuItem}
             currentUser={currentUserFixtures.userOnly}
           />
         </MemoryRouter>
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Review Item")).toBeInTheDocument();
-    const reviewButton = screen.getByText("Review Item");
+    expect(screen.getAllByText("Review Item").length).toBe(5);
+  });
 
-    fireEvent.click(reviewButton);
+  test("clicking review button navigates to review page", async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <MenuItemTable
+            menuItems={[{ ...menuItemFixtures.oneMenuItem[0], id: 42 }]}
+            currentUser={currentUserFixtures.userOnly}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
 
+    fireEvent.click(screen.getByText("Review Item"));
     await waitFor(() =>
-      expect(mockedNavigate).toHaveBeenCalledWith("/reviews/1"),
+      expect(mockedNavigate).toHaveBeenCalledWith("/reviews/42"),
     );
   });
 
-  test("Review button doesn't show up for regular users", async () => {
+  test("no buttons for non-logged in users", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>

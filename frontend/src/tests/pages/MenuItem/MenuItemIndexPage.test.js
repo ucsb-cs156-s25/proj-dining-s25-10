@@ -1,33 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import MenuItemIndexPage from "main/pages/MenuItem/MenuItemIndexPage";
-import { menuItemFixtures } from "fixtures/menuItemFixtures";
 
-jest.mock("main/layouts/BasicLayout/BasicLayout", () => {
-  return function MockBasicLayout({ children }) {
-    return <div data-testid="MockBasicLayout">{children}</div>;
-  };
-});
+const queryClient = new QueryClient();
 
-jest.mock("main/components/MenuItem/MenuItemTable", () => {
-  return function MockMenuItemTable({ menuItems }) {
-    return (
-      <div data-testid="MockMenuItemTable">
-        {menuItems.map((item) => (
-          <div key={item.id} data-testid="MenuItem">
-            {item.name} - {item.station}
-          </div>
-        ))}
-      </div>
-    );
-  };
-});
-
-describe("MenuItemIndexPage tests", () => {
-  const queryClient = new QueryClient();
-
-  test("renders without crashing", () => {
+describe("MenuItemIndexPage", () => {
+  test("renders all five menu items and headings", async () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
@@ -36,11 +15,23 @@ describe("MenuItemIndexPage tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByTestId("MockBasicLayout")).toBeInTheDocument();
     expect(screen.getByText("Menu Items")).toBeInTheDocument();
-    expect(screen.getByTestId("MockMenuItemTable")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Click on "Review Item" to see or add reviews/i),
+    ).toBeInTheDocument();
 
-    const menuItems = screen.getAllByTestId("MenuItem");
-    expect(menuItems.length).toBe(menuItemFixtures.fiveMenuItems.length);
+    expect(screen.getByText("Oatmeal (vgn)")).toBeInTheDocument();
+    expect(
+      screen.getByText("Blintz with Strawberry Compote (v)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Cage Free Scrambled Eggs (v)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Cage Free Scrambled Egg Whites (v)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Sliced Potato with Onions (vgn)"),
+    ).toBeInTheDocument();
   });
 });
