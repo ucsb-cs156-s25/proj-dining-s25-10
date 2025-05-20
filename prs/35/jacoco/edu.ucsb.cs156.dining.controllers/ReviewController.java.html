@@ -104,10 +104,10 @@ import jakarta.validation.Valid;
 
         // Reviewer comments moderation logic
 <span class="fc bfc" id="L106" title="All 4 branches covered.">        if (reviewerComments != null &amp;&amp; !reviewerComments.trim().isEmpty()) {</span>
-<span class="fc" id="L107">            review.setStatus(ModerationStatus.AWAITING_REVIEW);</span>
+            // review.setStatus(ModerationStatus.AWAITING_REVIEW);
 <span class="fc" id="L108">            review.setReviewerComments(reviewerComments);</span>
         } else {
-            // review.setReviewerComments(null); // treat truly empty comments as null
+            // review.setReviewerComments(null);// treat truly empty comments as null
 <span class="fc" id="L111">            review.setStatus(ModerationStatus.APPROVED); // auto-approve</span>
         }
         
