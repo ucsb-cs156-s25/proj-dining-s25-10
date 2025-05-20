@@ -68,7 +68,7 @@ describe("MenuItemTable Tests", () => {
     }
   });
 
-  test("Buttons work correctly", async () => {
+  test("Buttons and View links work correctly", async () => {
     const mockAlert = jest.spyOn(window, "alert").mockImplementation(() => {});
     axiosMock
       .onGet("/api/currentUser")
@@ -79,8 +79,6 @@ describe("MenuItemTable Tests", () => {
 
     render(
       <MemoryRouter>
-        {" "}
-        {/* ✅ Wrap with MemoryRouter to support <Link> */}
         <MenuItemTable
           menuItems={menuItemFixtures.oneMenuItem}
           currentUser={currentUserFixtures.userOnly}
@@ -95,10 +93,13 @@ describe("MenuItemTable Tests", () => {
     expect(button).toHaveClass("btn-warning");
 
     fireEvent.click(button);
-
     await waitFor(() => {
       expect(mockAlert).toBeCalledTimes(1);
     });
     expect(mockAlert).toBeCalledWith("Reviews coming soon!");
+
+    const viewLink = screen.getByRole("link", { name: "View" });
+    expect(viewLink).toBeInTheDocument();
+    expect(viewLink).toHaveAttribute("href", "/reviews/1");
   });
 });
