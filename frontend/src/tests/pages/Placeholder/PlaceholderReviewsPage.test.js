@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-import PlaceholderReviewsPage from "main/pages/MenuItem/PlaceholderReviewsPage";
+import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
 
 describe("PlaceholderReviewsPage", () => {
   const queryClient = new QueryClient();
