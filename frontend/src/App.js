@@ -8,7 +8,7 @@ import PlaceholderCreatePage from "main/pages/Placeholder/PlaceholderCreatePage"
 import PlaceholderEditPage from "main/pages/Placeholder/PlaceholderEditPage";
 
 import MyReviewsIndexPage from "main/pages/MyReviews/MyReviewsIndexPage";
-
+import MenuItemIndexPage from "main/pages/MenuItem/MenuItemIndexPage";
 import MealTimesPage from "main/pages/Meal/MealTimesPage";
 
 import Moderate from "main/pages/Moderate";
@@ -36,6 +36,7 @@ function App() {
           <>
             <Route exact path="/myreviews" element={<MyReviewsIndexPage />} />
             <Route exact path="/reviews/:itemid" element={<PlaceHolderReviewsPage />} />
+            <Route exact path="/menuitems" element={<MenuItemIndexPage />} />
           </>
         )}
         {hasRole(currentUser, "ROLE_ADMIN") && (

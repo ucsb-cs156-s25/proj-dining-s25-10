@@ -6,7 +6,6 @@ export default function MenuItemTable({ menuItems, currentUser }) {
   const testid = "MenuItemTable";
   const navigate = useNavigate();
   
-  // Update the reviewCallback to navigate to the reviews page
   const reviewCallback = (_cell) => {
     navigate(`/reviews/${_cell.row.original.id}`);
   };
