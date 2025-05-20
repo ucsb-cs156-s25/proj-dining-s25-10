@@ -1,20 +1,26 @@
 import { render, screen } from "@testing-library/react";
 import PlaceholderReviewsIndexPage from "main/pages/Reviews/PlaceholderReviewsIndexPage";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 
 describe("PlaceholderReviewsIndexPage", () => {
+  const queryClient = new QueryClient();
+
   test("renders menu items and review links correctly", () => {
     render(
-      <MemoryRouter>
-        <PlaceholderReviewsIndexPage />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <PlaceholderReviewsIndexPage />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     expect(screen.getByText("Reviews Index Page")).toBeInTheDocument();
     expect(screen.getByText("Oatmeal (vgn)")).toBeInTheDocument();
 
-    const link = screen.getByRole("link", { name: "View" });
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/reviews/1");
+    const links = screen.getAllByRole("link", { name: "View" });
+    expect(links.length).toBe(5);
+
+    expect(links[0]).toHaveAttribute("href", "/reviews/1");
   });
 });
