@@ -2,6 +2,18 @@ import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import MenuItemIndexPage from "main/pages/MenuItem/MenuItemIndexPage";
 
+jest.mock("main/components/Nav/AppNavbar", () => {
+  return function MockAppNavbar() {
+    return <div data-testid="MockAppNavbar"></div>;
+  };
+});
+
+jest.mock("main/components/Nav/Footer", () => {
+  return function MockFooter() {
+    return <div data-testid="MockFooter"></div>;
+  };
+});
+
 jest.mock("main/components/MenuItem/MenuItemTable", () => {
   return function MockMenuItemTable(props) {
     return (
@@ -22,7 +34,16 @@ jest.mock("main/utils/currentUser", () => {
     useCurrentUser: () => ({
       data: { root: { user: { roles: ["ROLE_USER"] } } },
     }),
+    useLogout: () => ({ mutate: jest.fn() }),
     hasRole: () => true,
+  };
+});
+
+jest.mock("main/utils/systemInfo", () => {
+  return {
+    useSystemInfo: () => ({
+      data: { springH2ConsoleEnabled: false, showSwaggerUILink: false },
+    }),
   };
 });
 
