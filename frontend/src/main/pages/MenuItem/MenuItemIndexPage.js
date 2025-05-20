@@ -2,21 +2,14 @@ import React, { useState, useEffect } from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import MenuItemTable from "main/components/MenuItem/MenuItemTable";
 import { useCurrentUser } from "main/utils/currentUser";
+import { menuItemFixtures } from "fixtures/menuItemFixtures";
 
 export default function MenuItemIndexPage() {
   const { data: currentUser } = useCurrentUser();
   const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
-    const sampleMenuItems = [
-      { id: 1, name: "Pizza", station: "Italian" },
-      { id: 2, name: "Hamburger", station: "Grill" },
-      { id: 3, name: "Salad", station: "Fresh" },
-      { id: 4, name: "Pasta", station: "Italian" },
-      { id: 5, name: "Taco", station: "Mexican" },
-    ];
-
-    setMenuItems(sampleMenuItems);
+    setMenuItems(menuItemFixtures.fiveMenuItems);
   }, []);
 
   return (
