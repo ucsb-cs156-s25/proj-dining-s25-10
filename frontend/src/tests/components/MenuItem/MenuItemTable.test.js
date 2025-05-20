@@ -54,10 +54,12 @@ describe("MenuItemTable Tests", () => {
   test("Renders 5 Menu Items correctly without buttons", async () => {
     let fiveMenuItems = menuItemFixtures.fiveMenuItems;
     render(
-      <MenuItemTable
-        menuItems={fiveMenuItems}
-        currentUser={currentUserFixtures.notLoggedIn}
-      />,
+      <MemoryRouter>
+        <MenuItemTable
+          menuItems={fiveMenuItems}
+          currentUser={currentUserFixtures.notLoggedIn}
+        />
+      </MemoryRouter>,
     );
 
     for (let i = 0; i < fiveMenuItems.length; i++) {
