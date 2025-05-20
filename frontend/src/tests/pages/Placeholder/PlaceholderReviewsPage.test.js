@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import PlaceholderReviewsPage from "main/pages/Reviews/PlaceholderReviewsPage";
+import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 

@@ -68,7 +68,8 @@ function App() {
             />
             <Route
               path="/placeholder/reviews"
-              element={<PlaceholderReviewsIndexPage />} />
+              element={<PlaceholderReviewsIndexPage />}
+            />
           </>
         )}
         <>
