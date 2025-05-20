@@ -4,20 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function MenuItemTable({ menuItems, currentUser }) {
   const testid = "MenuItemTable";
-  let navigate;
-
-  try {
-    navigate = useNavigate();
-  } catch (error) {
-    navigate = () => {};
-  }
+  const navigate = useNavigate();
 
   const reviewCallback = (_cell) => {
-    try {
-      navigate(`/reviews/${_cell.row.original.id}`);
-    } catch (error) {
-      console.log(`Would navigate to /reviews/${_cell.row.original.id}`);
-    }
+    navigate(`/reviews/${_cell.row.original.id}`);
   };
 
   const columns = [

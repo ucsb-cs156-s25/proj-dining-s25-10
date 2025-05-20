@@ -1,38 +1,31 @@
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import MenuItemIndexPage from "main/pages/MenuItem/MenuItemIndexPage";
+import React, { useState, useEffect } from "react";
+import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
+import MenuItemTable from "main/components/MenuItem/MenuItemTable";
+import { useCurrentUser } from "main/utils/currentUser";
 
-jest.mock("react", () => {
-  const originalReact = jest.requireActual("react");
-  return {
-    ...originalReact,
-    useState: jest.fn().mockImplementation((initial) => {
-      if (Array.isArray(initial) && initial.length === 0) {
-        return [
-          [
-            { id: 1, name: "Pizza", station: "Italian" },
-            { id: 2, name: "Hamburger", station: "Grill" },
-          ],
-          jest.fn(),
-        ];
-      }
-      return [initial, jest.fn()];
-    }),
-  };
-});
+export default function MenuItemIndexPage() {
+  const { data: currentUser } = useCurrentUser();
+  const [menuItems, setMenuItems] = useState([]);
 
-describe("MenuItemIndexPage tests", () => {
-  test("renders without crashing", () => {
-    render(
-      <MemoryRouter>
-        <MenuItemIndexPage />
-      </MemoryRouter>,
-    );
+  useEffect(() => {
+    const sampleMenuItems = [
+      { id: 1, name: "Pizza", station: "Italian" },
+      { id: 2, name: "Hamburger", station: "Grill" },
+      { id: 3, name: "Salad", station: "Fresh" },
+      { id: 4, name: "Pasta", station: "Italian" },
+      { id: 5, name: "Taco", station: "Mexican" },
+    ];
 
-    expect(screen.getByText("Menu Items")).toBeInTheDocument();
-    expect(screen.getByText("Pizza")).toBeInTheDocument();
-    expect(screen.getByText("Italian")).toBeInTheDocument();
-    expect(screen.getByText("Hamburger")).toBeInTheDocument();
-    expect(screen.getByText("Grill")).toBeInTheDocument();
-  });
-});
+    setMenuItems(sampleMenuItems);
+  }, []);
+
+  return (
+    <BasicLayout>
+      <div className="pt-2">
+        <h1>Menu Items</h1>
+        <p>Click on "Review Item" to see or add reviews for each menu item.</p>
+        <MenuItemTable menuItems={menuItems} currentUser={currentUser} />
+      </div>
+    </BasicLayout>
+  );
+}

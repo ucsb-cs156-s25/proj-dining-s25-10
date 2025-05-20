@@ -43,10 +43,10 @@ describe("MenuItemTable tests", () => {
       </MemoryRouter>,
     );
 
-    const buttons = screen.getAllByTestId(
-      "MenuItemTable-cell-row-0-button-Review Item",
+    const buttonCells = screen.getAllByTestId(
+      /MenuItemTable-cell-row-\d+-button-Review Item/,
     );
-    expect(buttons.length).toBeGreaterThan(0);
+    expect(buttonCells.length).toBe(2);
   });
 
   test("clicking review button navigates to correct URL", () => {
@@ -59,9 +59,7 @@ describe("MenuItemTable tests", () => {
       </MemoryRouter>,
     );
 
-    const buttons = screen.getAllByTestId(
-      "MenuItemTable-cell-row-0-button-Review Item",
-    );
+    const buttons = screen.getAllByRole("button", { name: "Review Item" });
     fireEvent.click(buttons[0]);
 
     expect(mockedNavigate).toHaveBeenCalledWith("/reviews/1");
