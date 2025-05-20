@@ -35,6 +35,11 @@ describe("MenuItemTable Tests", () => {
     expect(
       screen.getByTestId("MenuItemTable-header-station"),
     ).toHaveTextContent("Station");
+
+    expect(
+      screen.getByTestId("MenuItemTable-header-Reviews"),
+    ).toHaveTextContent("Reviews");
+
     expect(
       screen.queryByTestId("MenuItemTable-row-cell-0-col-name"),
     ).not.toBeInTheDocument();
