@@ -8,6 +8,7 @@ import {
   currentUserFixtures,
 } from "../../../fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "../../../fixtures/systemInfoFixtures";
+import { MemoryRouter } from "react-router-dom";
 
 describe("MenuItemTable Tests", () => {
   let axiosMock;
@@ -15,9 +16,11 @@ describe("MenuItemTable Tests", () => {
   beforeAll(() => {
     axiosMock = new AxiosMockAdapter(axios);
   });
+
   afterEach(() => {
     axiosMock.reset();
   });
+
   test("Headers appear and empty table renders correctly without buttons", async () => {
     render(
       <MenuItemTable
@@ -42,7 +45,8 @@ describe("MenuItemTable Tests", () => {
       screen.queryByTestId("MenuItemTable-cell-row-0-col-Review Item-button"),
     ).not.toBeInTheDocument();
   });
-  test("Renders 5 Menu Items Correctly correctly without buttons", async () => {
+
+  test("Renders 5 Menu Items correctly without buttons", async () => {
     let fiveMenuItems = menuItemFixtures.fiveMenuItems;
     render(
       <MenuItemTable
@@ -72,12 +76,18 @@ describe("MenuItemTable Tests", () => {
     axiosMock
       .onGet("/api/systemInfo")
       .reply(200, systemInfoFixtures.showingNeither);
+
     render(
-      <MenuItemTable
-        menuItems={menuItemFixtures.oneMenuItem}
-        currentUser={currentUserFixtures.userOnly}
-      />,
+      <MemoryRouter>
+        {" "}
+        {/* ✅ Wrap with MemoryRouter to support <Link> */}
+        <MenuItemTable
+          menuItems={menuItemFixtures.oneMenuItem}
+          currentUser={currentUserFixtures.userOnly}
+        />
+      </MemoryRouter>,
     );
+
     let button = screen.getByTestId(
       "MenuItemTable-cell-row-0-col-Review Item-button",
     );
