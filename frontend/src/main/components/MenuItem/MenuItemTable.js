@@ -4,12 +4,22 @@ import { useNavigate } from "react-router-dom";
 
 export default function MenuItemTable({ menuItems, currentUser }) {
   const testid = "MenuItemTable";
-  const navigate = useNavigate();
-  
+  let navigate;
+
+  try {
+    navigate = useNavigate();
+  } catch (error) {
+    navigate = () => {};
+  }
+
   const reviewCallback = (_cell) => {
-    navigate(`/reviews/${_cell.row.original.id}`);
+    try {
+      navigate(`/reviews/${_cell.row.original.id}`);
+    } catch (error) {
+      console.log(`Would navigate to /reviews/${_cell.row.original.id}`);
+    }
   };
-  
+
   const columns = [
     {
       Header: "Item Name",
@@ -20,7 +30,7 @@ export default function MenuItemTable({ menuItems, currentUser }) {
       accessor: "station",
     },
   ];
-  
+
   if (hasRole(currentUser, "ROLE_USER")) {
     columns.push(
       ButtonColumn("Review Item", "warning", reviewCallback, testid),

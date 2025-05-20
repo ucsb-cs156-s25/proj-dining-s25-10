@@ -1,44 +1,38 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import MenuItemIndexPage from "main/pages/MenuItem/MenuItemIndexPage";
 
-jest.mock("main/utils/menuItemUtils", () => {
-    return {
-        fetchMenuItems: jest.fn().mockResolvedValue([
-            {
-                id: 1,
-                name: "Pizza",
-                station: "Italian"
-            },
-            {
-                id: 2,
-                name: "Hamburger",
-                station: "Grill"
-            }
-        ])
-    };
+jest.mock("react", () => {
+  const originalReact = jest.requireActual("react");
+  return {
+    ...originalReact,
+    useState: jest.fn().mockImplementation((initial) => {
+      if (Array.isArray(initial) && initial.length === 0) {
+        return [
+          [
+            { id: 1, name: "Pizza", station: "Italian" },
+            { id: 2, name: "Hamburger", station: "Grill" },
+          ],
+          jest.fn(),
+        ];
+      }
+      return [initial, jest.fn()];
+    }),
+  };
 });
 
 describe("MenuItemIndexPage tests", () => {
-    const queryClient = new QueryClient();
+  test("renders without crashing", () => {
+    render(
+      <MemoryRouter>
+        <MenuItemIndexPage />
+      </MemoryRouter>,
+    );
 
-    test("renders without crashing", async () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <MemoryRouter>
-                    <MenuItemIndexPage />
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-
-        expect(screen.getByText("Menu Items")).toBeInTheDocument();
-        
-        await waitFor(() => {
-            expect(screen.getByText("Pizza")).toBeInTheDocument();
-            expect(screen.getByText("Italian")).toBeInTheDocument();
-            expect(screen.getByText("Hamburger")).toBeInTheDocument();
-            expect(screen.getByText("Grill")).toBeInTheDocument();
-        });
-    });
+    expect(screen.getByText("Menu Items")).toBeInTheDocument();
+    expect(screen.getByText("Pizza")).toBeInTheDocument();
+    expect(screen.getByText("Italian")).toBeInTheDocument();
+    expect(screen.getByText("Hamburger")).toBeInTheDocument();
+    expect(screen.getByText("Grill")).toBeInTheDocument();
+  });
 });

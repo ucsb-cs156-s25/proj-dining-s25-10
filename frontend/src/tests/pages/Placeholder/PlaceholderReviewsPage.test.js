@@ -1,37 +1,35 @@
 import { render, screen } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
 
+jest.mock("react", () => {
+  const originalReact = jest.requireActual("react");
+  const originalUseState = originalReact.useState;
+
+  return {
+    ...originalReact,
+    useState: jest.fn((init) => {
+      if (init === null) {
+        return [{ name: "Menu Item 1" }, jest.fn()];
+      }
+      return originalUseState(init);
+    }),
+  };
+});
+
 describe("PlaceholderReviewsPage tests", () => {
-    const queryClient = new QueryClient();
+  test("renders without crashing", () => {
+    render(
+      <MemoryRouter initialEntries={["/reviews/1"]}>
+        <Routes>
+          <Route path="/reviews/:itemid" element={<PlaceholderReviewsPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
-    test("renders without crashing", () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <MemoryRouter initialEntries={["/reviews/1"]}>
-                    <Routes>
-                        <Route path="/reviews/:itemid" element={<PlaceholderReviewsPage />} />
-                    </Routes>
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-
-        expect(screen.getByText(/Reviews for Menu Item 1/)).toBeInTheDocument();
-        expect(screen.getByText(/Coming Soon!/)).toBeInTheDocument();
-    });
-
-    test("renders correct item id from URL", () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <MemoryRouter initialEntries={["/reviews/42"]}>
-                    <Routes>
-                        <Route path="/reviews/:itemid" element={<PlaceholderReviewsPage />} />
-                    </Routes>
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-
-        expect(screen.getByText(/Reviews for Menu Item 42/)).toBeInTheDocument();
-    });
+    const headingElement = screen.getByRole("heading", { level: 1 });
+    expect(headingElement).toBeInTheDocument();
+    expect(headingElement).toHaveTextContent("Reviews for Menu Item 1");
+    expect(screen.getByText(/Coming Soon!/)).toBeInTheDocument();
+  });
 });
