@@ -62,6 +62,10 @@ function App() {
               path="/placeholder/create"
               element={<PlaceholderCreatePage />}
             />
+          </>
+        )}
+        {hasRole(currentUser, "ROLE_ADMIN") && (
+          <>
             <Route
               path="/reviews/:itemid"
               element={<PlaceholderReviewsPage />}
