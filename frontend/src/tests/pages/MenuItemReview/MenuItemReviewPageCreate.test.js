@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useCurrentUser } from "main/utils/currentUser";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router";
 
 import CreateReviewPage from "main/pages/ReviewsPage/CreateReviewsPage";
 

@@ -3,7 +3,7 @@
 import React from "react";
 import OurTable, { ButtonColumn } from "../OurTable";
 import { hasRole } from "../../utils/currentUser";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 
 export default function MenuItemTable({ menuItems, currentUser }) {
   const testid = "MenuItemTable";

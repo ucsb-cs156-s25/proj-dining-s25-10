@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { RouterProvider } from "react-router/dom";
+import { createBrowserRouter, Routes, Route } from "react-router";
 import HomePage from "main/pages/HomePage";
 import ProfilePage from "main/pages/ProfilePage";
 import AdminUsersPage from "main/pages/AdminUsersPage";
@@ -25,71 +26,79 @@ import MenuItemPage from "main/pages/MenuItem/MenuItemPage";
 function App() {
   const { data: currentUser } = useCurrentUser();
 
-  return (
-    <BrowserRouter
-      future={{
+  const routes = (
+    <Routes>
+      <Route exact path="/" element={<HomePage />} />
+      <Route exact path="/profile" element={<ProfilePage />} />
+      {hasRole(currentUser, "ROLE_ADMIN") && (
+        <Route exact path="/admin/users" element={<AdminUsersPage />} />
+      )}
+      {hasRole(currentUser, "ROLE_USER") && (
+        <>
+          <Route exact path="/myreviews" element={<MyReviewsIndexPage />} />
+        </>
+      )}
+      {hasRole(currentUser, "ROLE_ADMIN") && (
+        <Route exact path="/moderate" element={<Moderate />} />
+      )}
+      {hasRole(currentUser, "ROLE_USER") && (
+        <>
+          <Route
+            exact
+            path="/placeholder"
+            element={<PlaceholderIndexPage />}
+          />
+        </>
+      )}
+      {hasRole(currentUser, "ROLE_USER") && (
+        <>
+          <Route
+            exact
+            path="/placeholder/edit/:id"
+            element={<PlaceholderEditPage />}
+          />
+          <Route
+            exact
+            path="/reviews/create/:id?"
+            element={<CreateReviewPage />}
+          />
+          <Route
+            exact
+            path="/reviews/edit/:id"
+            element={<ReviewEditPage />}
+          />
+        </>
+      )}
+      <>
+        <Route
+          exact
+          path="/diningcommons/:date-time/:dining-commons-code"
+          element={<MealTimesPage />}
+        />
+      </>
+      <>
+        <Route
+          exact
+          path="/diningcommons/:date-time/:dining-commons-code/:meal"
+          element={<MenuItemPage />}
+        />
+      </>
+    </Routes>
+  );
+  
+  const router = createBrowserRouter([
+    {
+      path: "*",
+      element: routes,
+      future: {
         v7_relativeSplatPath: true,
         v7_startTransition: true
-      }}
-    >
-      <Routes>
-        <Route exact path="/" element={<HomePage />} />
-        <Route exact path="/profile" element={<ProfilePage />} />
-        {hasRole(currentUser, "ROLE_ADMIN") && (
-          <Route exact path="/admin/users" element={<AdminUsersPage />} />
-        )}
-        {hasRole(currentUser, "ROLE_USER") && (
-          <>
-            <Route exact path="/myreviews" element={<MyReviewsIndexPage />} />
-          </>
-        )}
-        {hasRole(currentUser, "ROLE_ADMIN") && (
-          <Route exact path="/moderate" element={<Moderate />} />
-        )}
-        {hasRole(currentUser, "ROLE_USER") && (
-          <>
-            <Route
-              exact
-              path="/placeholder"
-              element={<PlaceholderIndexPage />}
-            />
-          </>
-        )}
-        {hasRole(currentUser, "ROLE_USER") && (
-          <>
-            <Route
-              exact
-              path="/placeholder/edit/:id"
-              element={<PlaceholderEditPage />}
-            />
-            <Route
-              exact
-              path="/reviews/create/:id?"
-              element={<CreateReviewPage />}
-            />
-            <Route
-              exact
-              path="/reviews/edit/:id"
-              element={<ReviewEditPage />}
-            />
-          </>
-        )}
-        <>
-          <Route
-            exact
-            path="/diningcommons/:date-time/:dining-commons-code"
-            element={<MealTimesPage />}
-          />
-        </>
-        <>
-          <Route
-            exact
-            path="/diningcommons/:date-time/:dining-commons-code/:meal"
-            element={<MenuItemPage />}
-          />
-        </>
-      </Routes>
-    </BrowserRouter>
+      },
+    },
+  ]);
+
+  return (
+    <RouterProvider router={router} />
   );
 }
 

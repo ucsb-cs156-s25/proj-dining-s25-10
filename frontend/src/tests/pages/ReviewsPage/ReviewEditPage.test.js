@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import ReviewEditPage from "main/pages/ReviewsPage/ReviewEditPage";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { MemoryRouter, Routes, Route } from "react-router-dom";
+import { MemoryRouter, Routes, Route } from "react-router";
 
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";

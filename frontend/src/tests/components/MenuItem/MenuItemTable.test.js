@@ -11,7 +11,7 @@ import {
 import { systemInfoFixtures } from "../../../fixtures/systemInfoFixtures";
 import AxiosMockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 
 // mock react-router-dom hooks
 const mockNavigate = jest.fn();
