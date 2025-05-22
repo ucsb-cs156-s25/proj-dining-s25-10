@@ -263,9 +263,14 @@ describe("ReviewTable tests", () => {
       expect(axiosMock.history.put.length).toBe(1);
     });
 
-    expect(axiosMock.history.put[0].url).toBe("/api/reviews/2");
-    expect(JSON.parse(axiosMock.history.put[0].data)).toMatchObject({
-      status: "Approved",
+    await waitFor(() => {
+      expect(axiosMock.history.put[0].url).toBe("/api/reviews/2");
+    });
+
+    await waitFor(() => {
+      expect(JSON.parse(axiosMock.history.put[0].data)).toMatchObject({
+        status: "Approved",
+      });
     });
 
     const denyButton = await screen.findByTestId(
@@ -274,12 +279,17 @@ describe("ReviewTable tests", () => {
     fireEvent.click(denyButton);
 
     await waitFor(() => {
-      expect(axiosMock.history.put.length).toBe(1);
+      expect(axiosMock.history.put.length).toBe(2);
     });
 
-    expect(axiosMock.history.put[0].url).toBe("/api/reviews/2");
-    expect(JSON.parse(axiosMock.history.put[0].data)).toMatchObject({
-      status: "Denied",
+    await waitFor(() => {
+      expect(axiosMock.history.put[1].url).toBe("/api/reviews/3");
+    });
+
+    await waitFor(() => {
+      expect(JSON.parse(axiosMock.history.put[1].data)).toMatchObject({
+        status: "Denied",
+      });
     });
   });
 });
