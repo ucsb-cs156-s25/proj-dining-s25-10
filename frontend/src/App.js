@@ -43,11 +43,7 @@ function App() {
       )}
       {hasRole(currentUser, "ROLE_USER") && (
         <>
-          <Route
-            exact
-            path="/placeholder"
-            element={<PlaceholderIndexPage />}
-          />
+          <Route exact path="/placeholder" element={<PlaceholderIndexPage />} />
         </>
       )}
       {hasRole(currentUser, "ROLE_USER") && (
@@ -62,11 +58,7 @@ function App() {
             path="/reviews/create/:id?"
             element={<CreateReviewPage />}
           />
-          <Route
-            exact
-            path="/reviews/edit/:id"
-            element={<ReviewEditPage />}
-          />
+          <Route exact path="/reviews/edit/:id" element={<ReviewEditPage />} />
         </>
       )}
       <>
@@ -85,21 +77,19 @@ function App() {
       </>
     </Routes>
   );
-  
+
   const router = createBrowserRouter([
     {
       path: "*",
       element: routes,
       future: {
         v7_relativeSplatPath: true,
-        v7_startTransition: true
+        v7_startTransition: true,
       },
     },
   ]);
 
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
