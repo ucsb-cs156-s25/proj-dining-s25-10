@@ -5,6 +5,12 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
+import {
+  onDeleteSuccess,
+  onApproveSuccess,
+  onDenySuccess,
+  cellToAxiosParamsDelete,
+} from "main/utils/reviewUtils";
 
 import { toast } from "react-toastify";
 
@@ -290,6 +296,44 @@ describe("ReviewTable tests", () => {
       expect(JSON.parse(axiosMock.history.put[1].data)).toMatchObject({
         status: "Denied",
       });
+    });
+  });
+});
+
+describe("reviewUtils function coverage", () => {
+  beforeEach(() => {
+    toast.mockClear();
+  });
+
+  test("onDeleteSuccess calls toast with correct message", () => {
+    onDeleteSuccess("Review deleted");
+    expect(toast).toHaveBeenCalledWith("Review deleted");
+  });
+
+  test("onApproveSuccess calls toast with correct message", () => {
+    onApproveSuccess("Review approved");
+    expect(toast).toHaveBeenCalledWith("Review approved");
+  });
+
+  test("onDenySuccess calls toast with correct message", () => {
+    onDenySuccess("Review denied");
+    expect(toast).toHaveBeenCalledWith("Review denied");
+  });
+
+  test("cellToAxiosParamsDelete returns correct delete config", () => {
+    const cell = {
+      row: {
+        values: {
+          id: 42,
+        },
+      },
+    };
+
+    const result = cellToAxiosParamsDelete(cell);
+    expect(result).toEqual({
+      url: "/api/reviews",
+      method: "DELETE",
+      params: { id: 42 },
     });
   });
 });
