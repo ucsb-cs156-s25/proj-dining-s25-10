@@ -2,7 +2,7 @@ import { useCurrentUser } from "main/utils/currentUser";
 import { useBackend } from "main/utils/useBackend";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import MenuItemTable from "main/components/MenuItem/MenuItemTable";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 export default function MenuItemPage() {
   const currentUser = useCurrentUser();
@@ -11,6 +11,15 @@ export default function MenuItemPage() {
     "dining-commons-code": diningCommons,
     meal,
   } = useParams();
+  
+  if (!meal || !date || !diningCommons) {
+    return (
+      <BasicLayout>
+        <h2>Loading...</h2>
+      </BasicLayout>
+    );
+  }
+
   const { data: menuItems } = useBackend(
     // Stryker disable next-line all : don't test internal caching of React Query
     [`/api/diningcommons/${date}/${diningCommons}/${meal}`],

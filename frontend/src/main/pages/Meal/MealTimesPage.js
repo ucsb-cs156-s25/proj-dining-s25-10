@@ -1,5 +1,5 @@
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useBackend, _useBackendMutation } from "main/utils/useBackend";
 import MealTable from "main/components/Meal/MealTable";
 
@@ -7,6 +7,16 @@ export default function MealTimesPage() {
   // Stryker disable next-line all : Can't test state because hook is internal
   let { "date-time": dateTime, "dining-commons-code": diningCommonsCode } =
     useParams();
+
+  if (!dateTime || !diningCommonsCode) {
+    return (
+      <BasicLayout>
+        <div className="pt-2">
+          <h1>Loading...</h1>
+        </div>
+      </BasicLayout>
+    );
+  }
 
   const {
     data: meals,
