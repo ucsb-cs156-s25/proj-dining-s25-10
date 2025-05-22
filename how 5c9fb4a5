@@ -1,0 +1,176 @@
+[33mcommit 983b815b55df22c4af03fee8881c5c938e874f50[m
+Author: Junjie Liu <junjieliu@ucsb.edu>
+Date:   Thu May 22 12:17:06 2025 -0700
+
+    placeholder post review
+
+[1mdiff --git a/frontend/src/App.js b/frontend/src/App.js[m
+[1mindex 05288f22..f36887ee 100644[m
+[1m--- a/frontend/src/App.js[m
+[1m+++ b/frontend/src/App.js[m
+[36m@@ -7,8 +7,10 @@[m [mimport PlaceholderIndexPage from "main/pages/Placeholder/PlaceholderIndexPage";[m
+ import PlaceholderCreatePage from "main/pages/Placeholder/PlaceholderCreatePage";[m
+ import PlaceholderEditPage from "main/pages/Placeholder/PlaceholderEditPage";[m
+ import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";[m
+[32m+[m[32mimport PlaceholderPostReviewPage from "main/pages/Placeholder/PlaceholderPostReviewPage";[m
+ [m
+ import PlaceholderReviewsIndexPage from "main/pages/Reviews/PlaceholderReviewsIndexPage";[m
+[32m+[m[32mimport PlaceholderPostReviewIndexPage from "main/pages/Reviews/PlaceholderPostReviewIndexPage";[m
+ [m
+ import MyReviewsIndexPage from "main/pages/MyReviews/MyReviewsIndexPage";[m
+ [m
+[36m@@ -70,10 +72,18 @@[m [mfunction App() {[m
+               path="/reviews/:itemid"[m
+               element={<PlaceholderReviewsPage />}[m
+             />[m
+[32m+[m[32m            <Route[m
+[32m+[m[32m              path="/reviews/post/:id"[m
+[32m+[m[32m              element={<PlaceholderPostReviewPage />}[m
+[32m+[m[32m            />[m
+             <Route[m
+               path="/placeholder/reviews"[m
+               element={<PlaceholderReviewsIndexPage />}[m
+             />[m
+[32m+[m[32m            <Route[m
+[32m+[m[32m              path="/placeholder/postreview"[m
+[32m+[m[32m              element={<PlaceholderPostReviewIndexPage />}[m
+[32m+[m[32m            />[m
+           </>[m
+         )}[m
+         <>[m
+[1mdiff --git a/frontend/src/main/pages/Placeholder/PlaceholderIndexPage.js b/frontend/src/main/pages/Placeholder/PlaceholderIndexPage.js[m
+[1mindex 9f761a83..45242c53 100644[m
+[1m--- a/frontend/src/main/pages/Placeholder/PlaceholderIndexPage.js[m
+[1m+++ b/frontend/src/main/pages/Placeholder/PlaceholderIndexPage.js[m
+[36m@@ -15,6 +15,9 @@[m [mexport default function PlaceholderIndexPage() {[m
+         <p>[m
+           <a href="/placeholder/reviews">Reviews</a>[m
+         </p>[m
+[32m+[m[32m        <p>[m
+[32m+[m[32m          <a href="/placeholder/postreview">Post Review</a>[m
+[32m+[m[32m        </p>[m
+       </div>[m
+     </BasicLayout>[m
+   );[m
+[1mdiff --git a/frontend/src/main/pages/Placeholder/PlaceholderPostReviewPage.js b/frontend/src/main/pages/Placeholder/PlaceholderPostReviewPage.js[m
+[1mnew file mode 100644[m
+[1mindex 00000000..07b706a0[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/main/pages/Placeholder/PlaceholderPostReviewPage.js[m
+[36m@@ -0,0 +1,15 @@[m
+[32m+[m[32mimport { useParams } from "react-router-dom";[m
+[32m+[m[32mimport BasicLayout from "main/layouts/BasicLayout/BasicLayout";[m
+[32m+[m
+[32m+[m[32mexport default function PlaceholderPostReviewPage() {[m
+[32m+[m[32m  const { id } = useParams();[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <BasicLayout>[m
+[32m+[m[32m      <div className="pt-2">[m
+[32m+[m[32m        <h1>Review Posting Page for Menu Item {id}</h1>[m
+[32m+[m[32m        <p>Coming Soon!</p>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </BasicLayout>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/main/pages/Reviews/PlaceholderPostReviewIndexPage.js b/frontend/src/main/pages/Reviews/PlaceholderPostReviewIndexPage.js[m
+[1mnew file mode 100644[m
+[1mindex 00000000..feb804c8[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/main/pages/Reviews/PlaceholderPostReviewIndexPage.js[m
+[36m@@ -0,0 +1,35 @@[m
+[32m+[m[32mimport BasicLayout from "main/layouts/BasicLayout/BasicLayout";[m
+[32m+[m[32mimport { menuItemFixtures } from "fixtures/menuItemFixtures";[m
+[32m+[m[32mimport { Link } from "react-router-dom";[m
+[32m+[m
+[32m+[m[32mexport default function PlaceholderPostReviewIndexPage() {[m
+[32m+[m[32m  const menuItems = menuItemFixtures.fiveMenuItems;[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <BasicLayout>[m
+[32m+[m[32m      <div className="pt-2">[m
+[32m+[m[32m        <h1>Reviews Index Page</h1>[m
+[32m+[m[32m        <table className="table table-bordered table-striped table-hover">[m
+[32m+[m[32m          <thead>[m
+[32m+[m[32m            <tr>[m
+[32m+[m[32m              <th>Item Name</th>[m
+[32m+[m[32m              <th>Station</th>[m
+[32m+[m[32m              <th>Link to Reviews</th>[m
+[32m+[m[32m            </tr>[m
+[32m+[m[32m          </thead>[m
+[32m+[m[32m          <tbody>[m
+[32m+[m[32m            {menuItems.map((item) => ([m
+[32m+[m[32m              <tr key={item.id}>[m
+[32m+[m[32m                <td>{item.name}</td>[m
+[32m+[m[32m                <td>{item.station}</td>[m
+[32m+[m[32m                <td>[m
+[32m+[m[32m                  <Link to={`/reviews/post/${item.id}`}>Post Review</Link>[m
+[32m+[m[32m                </td>[m
+[32m+[m[32m              </tr>[m
+[32m+[m[32m            ))}[m
+[32m+[m[32m          </tbody>[m
+[32m+[m[32m        </table>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </BasicLayout>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/tests/pages/Placeholder/PlaceholderPostReviewPage.test.js b/frontend/src/tests/pages/Placeholder/PlaceholderPostReviewPage.test.js[m
+[1mnew file mode 100644[m
+[1mindex 00000000..b7463cc1[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/tests/pages/Placeholder/PlaceholderPostReviewPage.test.js[m
+[36m@@ -0,0 +1,18 @@[m
+[32m+[m[32mimport { render, screen } from "@testing-library/react";[m
+[32m+[m[32mimport { MemoryRouter, Route, Routes } from "react-router-dom";[m
+[32m+[m[32mimport PlaceholderPostReviewPage from "main/pages/Placeholder/PlaceholderPostReviewPage";[m
+[32m+[m
+[32m+[m[32mdescribe("PlaceholderPostReviewPage", () => {[m
+[32m+[m[32m  test("renders expected content with menu item id", () => {[m
+[32m+[m[32m    render([m
+[32m+[m[32m      <MemoryRouter initialEntries={["/reviews/post/42"]}>[m
+[32m+[m[32m        <Routes>[m
+[32m+[m[32m          <Route path="/reviews/post/:id" element={<PlaceholderPostReviewPage />} />[m
+[32m+[m[32m        </Routes>[m
+[32m+[m[32m      </MemoryRouter>[m
+[32m+[m[32m    );[m
+[32m+[m
+[32m+[m[32m    expect(screen.getByText("Review Posting Page for Menu Item 42")).toBeInTheDocument();[m
+[32m+[m[32m    expect(screen.getByText("Coming Soon!")).toBeInTheDocument();[m
+[32m+[m[32m  });[m
+[32m+[m[32m});[m
+[1mdiff --git a/frontend/src/tests/pages/Reviews/PlaceholderPostReviewIndexPage.test.js b/frontend/src/tests/pages/Reviews/PlaceholderPostReviewIndexPage.test.js[m
+[1mnew file mode 100644[m
+[1mindex 00000000..2b8bf9df[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/tests/pages/Reviews/PlaceholderPostReviewIndexPage.test.js[m
+[36m@@ -0,0 +1,30 @@[m
+[32m+[m[32mimport { render, screen } from "@testing-library/react";[m
+[32m+[m[32mimport { MemoryRouter } from "react-router-dom";[m
+[32m+[m[32mimport PlaceholderPostReviewIndexPage from "main/pages/Placeholder/PlaceholderPostReviewIndexPage";[m
+[32m+[m
+[32m+[m[32mdescribe("PlaceholderPostReviewIndexPage", () => {[m
+[32m+[m[32m  test("renders menu items and Post Review links correctly", () => {[m
+[32m+[m[32m    render([m
+[32m+[m[32m      <MemoryRouter>[m
+[32m+[m[32m        <PlaceholderPostReviewIndexPage />[m
+[32m+[m[32m      </MemoryRouter>[m
+[32m+[m[32m    );[m
+[32m+[m
+[32m+[m[32m    expect(screen.getByText("Reviews Index Page")).toBeInTheDocument();[m
+[32m+[m
+[32m+[m[32m    const expectedItems = [[m
+[32m+[m[32m      "Oatmeal (vgn)",[m
+[32m+[m[32m      "Blintz with Strawberry Compote (v)",[m
+[32m+[m[32m      "Cage Free Scrambled Eggs (v)",[m
+[32m+[m[32m      "Cage Free Scrambled Egg Whites (v)",[m
+[32m+[m[32m      "Sliced Potato with Onions (vgn)"[m
+[32m+[m[32m    ];[m
+[32m+[m
+[32m+[m[32m    expectedItems.forEach((itemName, index) => {[m
+[32m+[m[32m      expect(screen.getByText(itemName)).toBeInTheDocument();[m
+[32m+[m[32m      const link = screen.getAllByRole("link", { name: "Post Review" })[index];[m
+[32m+[m[32m      expect(link).toBeInTheDocument();[m
+[32m+[m[32m      expect(link).toHaveAttribute("href", `/reviews/post/${index + 1}`);[m
+[32m+[m[32m    });[m
+[32m+[m[32m  });[m
+[32m+[m[32m});[m
