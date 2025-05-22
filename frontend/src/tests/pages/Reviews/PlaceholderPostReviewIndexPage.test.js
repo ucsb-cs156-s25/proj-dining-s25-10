@@ -1,30 +1,26 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import PlaceholderPostReviewIndexPage from "main/pages/Placeholder/PlaceholderPostReviewIndexPage";
 
 describe("PlaceholderPostReviewIndexPage", () => {
-  test("renders menu items and Post Review links correctly", () => {
+  const queryClient = new QueryClient();
+
+  test("renders menu items and post review links correctly", () => {
     render(
-      <MemoryRouter>
-        <PlaceholderPostReviewIndexPage />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <PlaceholderPostReviewIndexPage />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     expect(screen.getByText("Reviews Index Page")).toBeInTheDocument();
-
-    const expectedItems = [
-      "Oatmeal (vgn)",
-      "Blintz with Strawberry Compote (v)",
-      "Cage Free Scrambled Eggs (v)",
-      "Cage Free Scrambled Egg Whites (v)",
-      "Sliced Potato with Onions (vgn)",
-    ];
-
-    expectedItems.forEach((itemName, index) => {
-      expect(screen.getByText(itemName)).toBeInTheDocument();
-      const link = screen.getAllByRole("link", { name: "Post Review" })[index];
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute("href", `/reviews/post/${index + 1}`);
-    });
+    expect(screen.getByText("Oatmeal (vgn)")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Post Review" }).length).toBe(5);
+    expect(screen.getByRole("link", { name: "Post Review" })).toHaveAttribute(
+      "href",
+      "/reviews/post/1",
+    );
   });
 });

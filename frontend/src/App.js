@@ -73,7 +73,7 @@ function App() {
               element={<PlaceholderReviewsPage />}
             />
             <Route
-              path="/reviews/post/:id"
+              path="/reviews/post/:itemid"
               element={<PlaceholderPostReviewPage />}
             />
             <Route
