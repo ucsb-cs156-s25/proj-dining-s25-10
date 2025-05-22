@@ -20,7 +20,6 @@ export default function MealTimesPage() {
     [],
   );
 
-  // Safety check for undefined parameters
   if (!dateTime || !diningCommonsCode) {
     return (
       <BasicLayout>

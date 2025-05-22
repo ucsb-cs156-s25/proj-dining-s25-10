@@ -23,7 +23,7 @@ export default function MenuItemPage() {
     // Stryker disable next-line all : Don't test empty initial data
     [],
   );
-  
+
   if (!meal || !date || !diningCommons) {
     return (
       <BasicLayout>
