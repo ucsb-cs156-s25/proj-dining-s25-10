@@ -8,16 +8,6 @@ export default function MealTimesPage() {
   let { "date-time": dateTime, "dining-commons-code": diningCommonsCode } =
     useParams();
 
-  if (!dateTime || !diningCommonsCode) {
-    return (
-      <BasicLayout>
-        <div className="pt-2">
-          <h1>Loading...</h1>
-        </div>
-      </BasicLayout>
-    );
-  }
-
   const {
     data: meals,
     error: _error,
@@ -29,6 +19,17 @@ export default function MealTimesPage() {
     // Stryker disable next-line all : don't test default value of empty list
     [],
   );
+
+  // Safety check for undefined parameters
+  if (!dateTime || !diningCommonsCode) {
+    return (
+      <BasicLayout>
+        <div className="pt-2">
+          <h1>Loading...</h1>
+        </div>
+      </BasicLayout>
+    );
+  }
 
   return (
     <BasicLayout>

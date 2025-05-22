@@ -12,14 +12,6 @@ export default function MenuItemPage() {
     meal,
   } = useParams();
 
-  if (!meal || !date || !diningCommons) {
-    return (
-      <BasicLayout>
-        <h2>Loading...</h2>
-      </BasicLayout>
-    );
-  }
-
   const { data: menuItems } = useBackend(
     // Stryker disable next-line all : don't test internal caching of React Query
     [`/api/diningcommons/${date}/${diningCommons}/${meal}`],
@@ -31,6 +23,15 @@ export default function MenuItemPage() {
     // Stryker disable next-line all : Don't test empty initial data
     [],
   );
+  
+  // Safety check for undefined parameters
+  if (!meal || !date || !diningCommons) {
+    return (
+      <BasicLayout>
+        <h2>Loading...</h2>
+      </BasicLayout>
+    );
+  }
 
   return (
     <BasicLayout>
