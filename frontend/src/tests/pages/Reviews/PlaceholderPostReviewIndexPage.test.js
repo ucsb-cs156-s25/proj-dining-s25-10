@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
 import PlaceholderPostReviewIndexPage from "main/pages/Placeholder/PlaceholderPostReviewIndexPage";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { MemoryRouter } from "react-router-dom";
 
 describe("PlaceholderPostReviewIndexPage", () => {
   const queryClient = new QueryClient();
@@ -15,12 +15,11 @@ describe("PlaceholderPostReviewIndexPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Reviews Index Page")).toBeInTheDocument();
+    expect(screen.getByText("Post Reviews Index Page")).toBeInTheDocument();
     expect(screen.getByText("Oatmeal (vgn)")).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "Post Review" }).length).toBe(5);
-    expect(screen.getByRole("link", { name: "Post Review" })).toHaveAttribute(
-      "href",
-      "/reviews/post/1",
-    );
+
+    const links = screen.getAllByRole("link", { name: "Post Review" });
+    expect(links.length).toBe(5);
+    expect(links[0]).toHaveAttribute("href", "/reviews/post/1");
   });
 });
