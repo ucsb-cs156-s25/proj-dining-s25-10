@@ -15,6 +15,9 @@ export default function PlaceholderIndexPage() {
         <p>
           <a href="/placeholder/reviews">Reviews</a>
         </p>
+        <p>
+          <a href="/placeholder/postreview">Post Review</a>
+        </p>
       </div>
     </BasicLayout>
   );

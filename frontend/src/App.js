@@ -7,8 +7,10 @@ import PlaceholderIndexPage from "main/pages/Placeholder/PlaceholderIndexPage";
 import PlaceholderCreatePage from "main/pages/Placeholder/PlaceholderCreatePage";
 import PlaceholderEditPage from "main/pages/Placeholder/PlaceholderEditPage";
 import PlaceholderReviewsPage from "main/pages/Placeholder/PlaceholderReviewsPage";
+import PlaceholderPostReviewPage from "main/pages/Placeholder/PlaceholderPostReviewPage";
 
 import PlaceholderReviewsIndexPage from "main/pages/Reviews/PlaceholderReviewsIndexPage";
+import PlaceholderPostReviewIndexPage from "main/pages/Reviews/PlaceholderPostReviewIndexPage";
 
 import MyReviewsIndexPage from "main/pages/MyReviews/MyReviewsIndexPage";
 
@@ -71,8 +73,16 @@ function App() {
               element={<PlaceholderReviewsPage />}
             />
             <Route
+              path="/reviews/post/:id"
+              element={<PlaceholderPostReviewPage />}
+            />
+            <Route
               path="/placeholder/reviews"
               element={<PlaceholderReviewsIndexPage />}
+            />
+            <Route
+              path="/placeholder/postreview"
+              element={<PlaceholderPostReviewIndexPage />}
             />
           </>
         )}
