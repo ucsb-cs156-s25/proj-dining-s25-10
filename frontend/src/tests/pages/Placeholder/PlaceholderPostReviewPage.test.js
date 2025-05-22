@@ -7,12 +7,17 @@ describe("PlaceholderPostReviewPage", () => {
     render(
       <MemoryRouter initialEntries={["/reviews/post/42"]}>
         <Routes>
-          <Route path="/reviews/post/:id" element={<PlaceholderPostReviewPage />} />
+          <Route
+            path="/reviews/post/:id"
+            element={<PlaceholderPostReviewPage />}
+          />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    expect(screen.getByText("Review Posting Page for Menu Item 42")).toBeInTheDocument();
+    expect(
+      screen.getByText("Review Posting Page for Menu Item 42"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Coming Soon!")).toBeInTheDocument();
   });
 });

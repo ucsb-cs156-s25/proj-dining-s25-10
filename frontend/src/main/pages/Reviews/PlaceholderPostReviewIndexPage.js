@@ -8,7 +8,7 @@ export default function PlaceholderPostReviewIndexPage() {
   return (
     <BasicLayout>
       <div className="pt-2">
-        <h1>Reviews Index Page</h1>
+        <h1>Post Reviews Index Page</h1>
         <table className="table table-bordered table-striped table-hover">
           <thead>
             <tr>

@@ -7,7 +7,7 @@ describe("PlaceholderPostReviewIndexPage", () => {
     render(
       <MemoryRouter>
         <PlaceholderPostReviewIndexPage />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText("Reviews Index Page")).toBeInTheDocument();
@@ -17,7 +17,7 @@ describe("PlaceholderPostReviewIndexPage", () => {
       "Blintz with Strawberry Compote (v)",
       "Cage Free Scrambled Eggs (v)",
       "Cage Free Scrambled Egg Whites (v)",
-      "Sliced Potato with Onions (vgn)"
+      "Sliced Potato with Onions (vgn)",
     ];
 
     expectedItems.forEach((itemName, index) => {
