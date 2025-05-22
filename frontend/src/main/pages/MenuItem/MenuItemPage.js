@@ -11,7 +11,7 @@ export default function MenuItemPage() {
     "dining-commons-code": diningCommons,
     meal,
   } = useParams();
-  
+
   if (!meal || !date || !diningCommons) {
     return (
       <BasicLayout>

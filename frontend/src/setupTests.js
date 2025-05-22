@@ -5,7 +5,7 @@
 import "@testing-library/jest-dom";
 
 // To Fix Test Errors for React Router v7
-const { TextEncoder, TextDecoder } = require('util');
+const { TextEncoder, TextDecoder } = require("util");
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
