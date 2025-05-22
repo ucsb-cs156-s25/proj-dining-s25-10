@@ -24,7 +24,6 @@ export default function MenuItemPage() {
     [],
   );
   
-  // Safety check for undefined parameters
   if (!meal || !date || !diningCommons) {
     return (
       <BasicLayout>
