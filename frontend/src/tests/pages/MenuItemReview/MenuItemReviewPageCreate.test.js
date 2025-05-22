@@ -12,7 +12,7 @@ jest.mock("axios");
 jest.mock("react-toastify", () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useParams: jest.fn(),
   useNavigate: jest.fn(),
   useLocation: jest.fn(),

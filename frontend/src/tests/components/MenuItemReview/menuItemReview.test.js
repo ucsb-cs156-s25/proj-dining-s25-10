@@ -5,12 +5,12 @@ import {
   useNavigate,
   useLocation,
   useParams,
-} from "react-router-dom";
+} from "react-router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ReviewForm from "main/components/MenuItemReviews/ReviewForm";
 
-jest.mock("react-router-dom", () => {
-  const actual = jest.requireActual("react-router-dom");
+jest.mock("react-router", () => {
+  const actual = jest.requireActual("react-router");
   return {
     ...actual,
     useNavigate: jest.fn(),

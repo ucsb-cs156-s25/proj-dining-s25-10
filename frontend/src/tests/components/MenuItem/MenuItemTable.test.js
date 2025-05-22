@@ -15,8 +15,8 @@ import { MemoryRouter } from "react-router";
 
 // mock react-router-dom hooks
 const mockNavigate = jest.fn();
-jest.mock("react-router-dom", () => {
-  const original = jest.requireActual("react-router-dom");
+jest.mock("react-router", () => {
+  const original = jest.requireActual("react-router");
   return {
     __esModule: true,
     ...original,
