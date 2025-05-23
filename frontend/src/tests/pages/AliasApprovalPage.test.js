@@ -3,31 +3,16 @@ import AliasApprovalPage from "main/pages/AliasApprovalPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 
-const mockUsers = [
-  { id: 1, alias: "OldAlias", proposedAlias: "NewAlias" },
-  { id: 2, alias: "CoolGuy", proposedAlias: "ChillDude" },
-];
-
-jest.mock("main/utils/useBackend", () => ({
-  useBackend: jest.fn(() => ({
-    data: mockUsers,
-    isLoading: false,
-    error: null,
-  })),
-  useBackendMutation: jest.fn(() => ({
-    mutate: jest.fn(),
-    isLoading: false,
-    error: null,
-  })),
-}));
-
-jest.mock("react-toastify", () => ({
-  ToastContainer: () => null,
-  toast: jest.fn(),
-}));
+jest.mock("main/utils/useBackend");
+jest.mock("react-toastify");
 
 describe("AliasApprovalPage tests", () => {
   let queryClient;
+
+  const mockUsers = [
+    { id: 1, alias: "OldAlias", proposedAlias: "NewAlias" },
+    { id: 2, alias: "CoolGuy", proposedAlias: "ChillDude" },
+  ];
 
   beforeEach(() => {
     queryClient = new QueryClient({
@@ -35,6 +20,20 @@ describe("AliasApprovalPage tests", () => {
         queries: { retry: false },
         mutations: { retry: false },
       },
+    });
+
+    const { useBackend, useBackendMutation } = require("main/utils/useBackend");
+
+    useBackend.mockReturnValue({
+      data: mockUsers,
+      isLoading: false,
+      error: null,
+    });
+
+    useBackendMutation.mockReturnValue({
+      mutate: jest.fn(),
+      isLoading: false,
+      error: null,
     });
   });
 
