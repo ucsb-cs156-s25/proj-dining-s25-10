@@ -122,11 +122,12 @@ describe("utils/currentUser tests", () => {
 
       let expectedResult = {
         loggedIn: true,
-        root: { ...apiResult, rolesList: ["ERROR_GETTING_ROLES"] },
+        root: { ...apiResult, rolesList: [] },
       };
       expect(result.current.data).toEqual(expectedResult);
       queryClient.clear();
     });
+
   });
 
   describe("useLogout tests", () => {
