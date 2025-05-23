@@ -42,7 +42,7 @@ describe("AliasApprovalTable tests", () => {
       <QueryClientProvider client={queryClient}>
         <ToastContainer />
         <AliasApprovalTable users={sampleUsers} />
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
   }
 
@@ -60,8 +60,8 @@ describe("AliasApprovalTable tests", () => {
     fireEvent.click(approveButtons[0]);
     expect(
       await screen.findByText((content) =>
-        content.includes("Approved alias: NewAlias")
-      )
+        content.includes("Approved alias: NewAlias"),
+      ),
     ).toBeInTheDocument();
   });
 
@@ -71,8 +71,8 @@ describe("AliasApprovalTable tests", () => {
     fireEvent.click(rejectButtons[1]);
     expect(
       await screen.findByText((content) =>
-        content.includes("Rejected alias: CoolGuy")
-      )
+        content.includes("Rejected alias: CoolGuy"),
+      ),
     ).toBeInTheDocument();
   });
 });
