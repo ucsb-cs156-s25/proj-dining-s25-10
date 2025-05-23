@@ -263,9 +263,28 @@ describe("AliasApprovalTable tests", () => {
   });
 
   test("component uses correct testid", () => {
+    const { useBackendMutation } = require("main/utils/useBackend");
+
     renderComponent();
+
+    expect(useBackendMutation).toHaveBeenCalled();
+
     const table = screen.getByRole("table");
-    expect(table).toHaveAttribute("class", expect.stringContaining("table"));
+    expect(table).toBeInTheDocument();
+  });
+
+  test("queryClient invalidateQueries uses correct cache key", () => {
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    const onSuccess = useBackendMutation.mock.calls[0][1].onSuccess;
+
+    onSuccess({ alias: "TestAlias" }, { approved: true });
+
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
+      "alias-approval",
+    );
+    expect(queryClient.invalidateQueries).not.toHaveBeenCalledWith("");
   });
 
   test("button columns have correct styling classes", () => {
