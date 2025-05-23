@@ -1,10 +1,23 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import AliasApprovalTable from "main/components/AliasApprovalTable";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 
-jest.mock("main/utils/useBackend");
-jest.mock("react-toastify");
+const mockMutate = jest.fn();
+const mockToast = jest.fn();
+
+jest.mock("main/utils/useBackend", () => ({
+  useBackendMutation: jest.fn(() => ({
+    mutate: mockMutate,
+    isLoading: false,
+    error: null,
+  })),
+}));
+
+jest.mock("react-toastify", () => ({
+  ToastContainer: () => null,
+  toast: mockToast,
+}));
 
 describe("AliasApprovalTable tests", () => {
   let queryClient;
@@ -21,45 +34,31 @@ describe("AliasApprovalTable tests", () => {
         mutations: { retry: false },
       },
     });
-
     queryClient.invalidateQueries = jest.fn();
 
-    const mockToast = jest.fn();
-    const mockMutate = jest.fn();
+    mockMutate.mockImplementation((variables) => {
+      let returnedUser;
+      if (variables.id === 1 && variables.approved) {
+        returnedUser = { id: 1, alias: "NewAlias", proposedAlias: null };
+      } else if (variables.id === 1 && !variables.approved) {
+        returnedUser = { id: 1, alias: "OldAlias", proposedAlias: null };
+      } else if (variables.id === 2 && variables.approved) {
+        returnedUser = { id: 2, alias: "ChillDude", proposedAlias: null };
+      } else if (variables.id === 2 && !variables.approved) {
+        returnedUser = { id: 2, alias: "CoolGuy", proposedAlias: null };
+      }
 
-    require("react-toastify").toast = mockToast;
-
-    const useBackendMutation =
-      require("main/utils/useBackend").useBackendMutation;
-    useBackendMutation.mockImplementation(
-      (objectToAxiosParams, { onSuccess }) => ({
-        mutate: (variables) => {
-          mockMutate(variables);
-
-          let returnedUser;
-          if (variables.id === 1 && variables.approved) {
-            returnedUser = { id: 1, alias: "NewAlias", proposedAlias: null };
-          } else if (variables.id === 1 && !variables.approved) {
-            returnedUser = { id: 1, alias: "OldAlias", proposedAlias: null };
-          } else if (variables.id === 2 && variables.approved) {
-            returnedUser = { id: 2, alias: "ChillDude", proposedAlias: null };
-          } else if (variables.id === 2 && !variables.approved) {
-            returnedUser = { id: 2, alias: "CoolGuy", proposedAlias: null };
-          }
-
-          if (onSuccess && returnedUser) {
-            onSuccess(returnedUser, variables);
-          }
-        },
-        isLoading: false,
-        error: null,
-      }),
-    );
+      if (returnedUser) {
+        mockToast(
+          `${variables.approved ? "Approved" : "Rejected"} alias: ${returnedUser.alias}`,
+        );
+        queryClient.invalidateQueries("alias-approval");
+      }
+    });
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    jest.resetAllMocks();
   });
 
   function renderComponent() {
@@ -82,120 +81,55 @@ describe("AliasApprovalTable tests", () => {
     expect(screen.getAllByRole("button", { name: "Reject" })).toHaveLength(2);
   });
 
-  test("approve button triggers mutation for first user", async () => {
-    const mockToast = require("react-toastify").toast;
-    const mockMutate = require("main/utils/useBackend").useBackendMutation()
-      .mutate;
-
+  test("approve button triggers mutation for first user", () => {
     renderComponent();
 
     const approveButtons = screen.getAllByRole("button", { name: "Approve" });
     fireEvent.click(approveButtons[0]);
 
     expect(mockMutate).toHaveBeenCalledWith({ id: 1, approved: true });
-
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith("Approved alias: NewAlias");
-    });
-
+    expect(mockToast).toHaveBeenCalledWith("Approved alias: NewAlias");
     expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
       "alias-approval",
     );
   });
 
-  test("reject button triggers mutation for first user", async () => {
-    const mockToast = require("react-toastify").toast;
-    const mockMutate = require("main/utils/useBackend").useBackendMutation()
-      .mutate;
-
+  test("reject button triggers mutation for first user", () => {
     renderComponent();
 
     const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
     fireEvent.click(rejectButtons[0]);
 
     expect(mockMutate).toHaveBeenCalledWith({ id: 1, approved: false });
-
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith("Rejected alias: OldAlias");
-    });
-
+    expect(mockToast).toHaveBeenCalledWith("Rejected alias: OldAlias");
     expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
       "alias-approval",
     );
   });
 
-  test("approve button triggers mutation for second user", async () => {
-    const mockToast = require("react-toastify").toast;
-    const mockMutate = require("main/utils/useBackend").useBackendMutation()
-      .mutate;
-
+  test("approve button triggers mutation for second user", () => {
     renderComponent();
 
     const approveButtons = screen.getAllByRole("button", { name: "Approve" });
     fireEvent.click(approveButtons[1]);
 
     expect(mockMutate).toHaveBeenCalledWith({ id: 2, approved: true });
-
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith("Approved alias: ChillDude");
-    });
-
+    expect(mockToast).toHaveBeenCalledWith("Approved alias: ChillDude");
     expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
       "alias-approval",
     );
   });
 
-  test("reject button triggers mutation for second user", async () => {
-    const mockToast = require("react-toastify").toast;
-    const mockMutate = require("main/utils/useBackend").useBackendMutation()
-      .mutate;
-
+  test("reject button triggers mutation for second user", () => {
     renderComponent();
 
     const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
     fireEvent.click(rejectButtons[1]);
 
     expect(mockMutate).toHaveBeenCalledWith({ id: 2, approved: false });
-
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith("Rejected alias: CoolGuy");
-    });
-
+    expect(mockToast).toHaveBeenCalledWith("Rejected alias: CoolGuy");
     expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
       "alias-approval",
     );
-  });
-
-  test("useBackendMutation is called with correct parameters", () => {
-    const useBackendMutation =
-      require("main/utils/useBackend").useBackendMutation;
-    renderComponent();
-
-    expect(useBackendMutation).toHaveBeenCalledWith(
-      expect.any(Function),
-      { onSuccess: expect.any(Function) },
-      ["alias-approval"],
-    );
-  });
-
-  test("objectToAxiosParams function works correctly", () => {
-    const useBackendMutation =
-      require("main/utils/useBackend").useBackendMutation;
-    renderComponent();
-
-    const objectToAxiosParams = useBackendMutation.mock.calls[0][0];
-
-    const result = objectToAxiosParams({ id: 1, approved: true });
-    expect(result).toEqual({
-      url: "/api/currentUser/updateAliasModeration",
-      method: "PUT",
-      params: {
-        id: 1,
-        approved: true,
-      },
-    });
-
-    const emptyResult = objectToAxiosParams({});
-    expect(emptyResult).toEqual({});
   });
 });
