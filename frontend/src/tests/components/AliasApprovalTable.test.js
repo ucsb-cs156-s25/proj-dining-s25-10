@@ -244,4 +244,36 @@ describe("AliasApprovalTable tests", () => {
       "alias-approval",
     );
   });
+
+  test("console.error is called with correct message for missing variables", () => {
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    const objectToAxiosParams = useBackendMutation.mock.calls[0][0];
+    objectToAxiosParams();
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Missing id or approved in mutation variables:",
+      undefined,
+    );
+    consoleSpy.mockRestore();
+  });
+
+  test("component uses correct testid", () => {
+    renderComponent();
+    const table = screen.getByRole("table");
+    expect(table).toHaveAttribute("class", expect.stringContaining("table"));
+  });
+
+  test("button columns have correct styling classes", () => {
+    renderComponent();
+    const approveButtons = screen.getAllByRole("button", { name: "Approve" });
+    const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
+
+    expect(approveButtons[0]).toHaveClass("btn-success");
+    expect(rejectButtons[0]).toHaveClass("btn-danger");
+  });
 });
