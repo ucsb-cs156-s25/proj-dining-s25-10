@@ -76,6 +76,14 @@ describe("AliasApprovalTable tests", () => {
     expect(screen.getByText("ChillDude")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Approve" })).toHaveLength(2);
     expect(screen.getAllByRole("button", { name: "Reject" })).toHaveLength(2);
+
+    expect(
+      screen.getByTestId("AliasApprovalTable-header-group-0"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("AliasApprovalTable-header-alias"),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("AliasApprovalTable-row-0")).toBeInTheDocument();
   });
 
   test("approve button triggers mutation for first user", () => {
