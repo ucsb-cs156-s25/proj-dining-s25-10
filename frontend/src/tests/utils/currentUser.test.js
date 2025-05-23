@@ -117,19 +117,23 @@ describe("utils/currentUser tests", () => {
       const axiosMock = new AxiosMockAdapter(axios);
       axiosMock.onGet("/api/currentUser").reply(200, apiResult);
 
+      const restoreConsole = mockConsole();
       const { result } = renderHook(() => useCurrentUser(), { wrapper });
+
       await waitFor(() => result.current.isFetched);
+      expect(console.error).toHaveBeenCalled();
+      const errorMessage = console.error.mock.calls[0][0];
+      expect(errorMessage).toMatch(/Error getting roles: /);
+      restoreConsole();
 
       let expectedResult = {
         loggedIn: true,
-        root: { ...apiResult, rolesList: [] },
+        root: { ...apiResult, rolesList: ["ERROR_GETTING_ROLES"] },
       };
       expect(result.current.data).toEqual(expectedResult);
       queryClient.clear();
     });
-
   });
-
   describe("useLogout tests", () => {
     test("useLogout", async () => {
       const queryClient = new QueryClient();
@@ -164,7 +168,6 @@ describe("utils/currentUser tests", () => {
       queryClient.clear();
     });
   });
-
   describe("hasRole tests", () => {
     test('hasRole(x,"ROLE_ADMIN") return falsy when currentUser ill-defined', async () => {
       expect(hasRole(null, "ROLE_ADMIN")).toBeFalsy();
@@ -232,7 +235,6 @@ describe("utils/currentUser tests", () => {
         hasRole({ data: { root: { rolesList: [] } } }, "ROLE_USER"),
       ).toBeFalsy();
     });
-
     expect(hasRole({ root: { rolesList: null } })).toBeFalsy();
   });
 });
