@@ -40,10 +40,15 @@ function App() {
           hasRole(currentUser, "ROLE_MODERATOR")) && (
           <Route exact path="/moderate" element={<Moderate />} />
         )}
-        {(hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_MODERATOR")) && (
+        {(hasRole(currentUser, "ROLE_ADMIN") ||
+          hasRole(currentUser, "ROLE_MODERATOR")) && (
           <>
             <Route exact path="/moderate" element={<Moderate />} />
-            <Route exact path="/alias-approval" element={<AliasApprovalPage />} />
+            <Route
+              exact
+              path="/alias-approval"
+              element={<AliasApprovalPage />}
+            />
           </>
         )}
         {hasRole(currentUser, "ROLE_USER") && (

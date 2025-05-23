@@ -7,7 +7,7 @@ export default function AliasApprovalPage() {
   const { data: users } = useBackend(
     ["/api/admin/usersWithProposedAlias"],
     { method: "GET", url: "/api/admin/usersWithProposedAlias" },
-    []
+    [],
   );
 
   return (

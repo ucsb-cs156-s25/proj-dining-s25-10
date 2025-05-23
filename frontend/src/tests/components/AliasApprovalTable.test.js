@@ -1,0 +1,78 @@
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import AliasApprovalTable from "main/components/AliasApprovalTable";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ToastContainer } from "react-toastify";
+import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
+import { currentUser } from "main/utils/currentUser";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
+
+describe("AliasApprovalTable tests", () => {
+  const queryClient = new QueryClient();
+  const axiosMock = new AxiosMockAdapter(axios);
+
+  const sampleUsers = [
+    { id: 1, alias: "OldAlias", proposedAlias: "NewAlias" },
+    { id: 2, alias: "CoolGuy", proposedAlias: "ChillDude" },
+  ];
+
+  beforeEach(() => {
+    axiosMock.reset();
+    axiosMock.onPut("/api/currentUser/updateAliasModeration", { id: 1, approved: true }).reply(200, {
+      id: 1,
+      alias: "NewAlias",
+      proposedAlias: null,
+    });
+    axiosMock.onPut("/api/currentUser/updateAliasModeration", { id: 2, approved: false }).reply(200, {
+      id: 2,
+      alias: "CoolGuy",
+      proposedAlias: null,
+    });
+  });
+
+  test("renders table with aliases", () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ToastContainer />
+        <AliasApprovalTable users={sampleUsers} />
+      </QueryClientProvider>,
+    );
+
+    expect(screen.getByText("OldAlias")).toBeInTheDocument();
+    expect(screen.getByText("NewAlias")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Approve" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Reject" })).toBeInTheDocument();
+  });
+
+  test("approve button triggers mutation", async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ToastContainer />
+        <AliasApprovalTable users={sampleUsers} />
+      </QueryClientProvider>,
+    );
+
+    const approveButtons = screen.getAllByRole("button", { name: "Approve" });
+    fireEvent.click(approveButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Approved alias: NewAlias")).toBeInTheDocument();
+    });
+  });
+
+  test("reject button triggers mutation", async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ToastContainer />
+        <AliasApprovalTable users={sampleUsers} />
+      </QueryClientProvider>,
+    );
+
+    const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
+    fireEvent.click(rejectButtons[1]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Rejected alias: CoolGuy")).toBeInTheDocument();
+    });
+  });
+});
