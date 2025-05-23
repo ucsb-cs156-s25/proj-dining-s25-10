@@ -3,22 +3,8 @@ import AliasApprovalTable from "main/components/AliasApprovalTable";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 
-const mockMutate = jest.fn();
-const mockInvalidateQueries = jest.fn();
-const mockToast = jest.fn();
-
-jest.mock("main/utils/useBackend", () => ({
-  useBackendMutation: jest.fn(() => ({
-    mutate: mockMutate,
-    isLoading: false,
-    error: null,
-  })),
-}));
-
-jest.mock("react-toastify", () => ({
-  ...jest.requireActual("react-toastify"),
-  toast: mockToast,
-}));
+jest.mock("main/utils/useBackend");
+jest.mock("react-toastify");
 
 describe("AliasApprovalTable tests", () => {
   let queryClient;
@@ -35,10 +21,16 @@ describe("AliasApprovalTable tests", () => {
         mutations: { retry: false },
       },
     });
-    queryClient.invalidateQueries = mockInvalidateQueries;
 
-    const { useBackendMutation } = require("main/utils/useBackend");
+    queryClient.invalidateQueries = jest.fn();
 
+    const mockToast = jest.fn();
+    const mockMutate = jest.fn();
+
+    require("react-toastify").toast = mockToast;
+
+    const useBackendMutation =
+      require("main/utils/useBackend").useBackendMutation;
     useBackendMutation.mockImplementation(
       (objectToAxiosParams, { onSuccess }) => ({
         mutate: (variables) => {
@@ -67,6 +59,7 @@ describe("AliasApprovalTable tests", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   function renderComponent() {
@@ -90,6 +83,10 @@ describe("AliasApprovalTable tests", () => {
   });
 
   test("approve button triggers mutation for first user", async () => {
+    const mockToast = require("react-toastify").toast;
+    const mockMutate = require("main/utils/useBackend").useBackendMutation()
+      .mutate;
+
     renderComponent();
 
     const approveButtons = screen.getAllByRole("button", { name: "Approve" });
@@ -101,10 +98,16 @@ describe("AliasApprovalTable tests", () => {
       expect(mockToast).toHaveBeenCalledWith("Approved alias: NewAlias");
     });
 
-    expect(mockInvalidateQueries).toHaveBeenCalledWith("alias-approval");
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
+      "alias-approval",
+    );
   });
 
   test("reject button triggers mutation for first user", async () => {
+    const mockToast = require("react-toastify").toast;
+    const mockMutate = require("main/utils/useBackend").useBackendMutation()
+      .mutate;
+
     renderComponent();
 
     const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
@@ -116,10 +119,16 @@ describe("AliasApprovalTable tests", () => {
       expect(mockToast).toHaveBeenCalledWith("Rejected alias: OldAlias");
     });
 
-    expect(mockInvalidateQueries).toHaveBeenCalledWith("alias-approval");
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
+      "alias-approval",
+    );
   });
 
   test("approve button triggers mutation for second user", async () => {
+    const mockToast = require("react-toastify").toast;
+    const mockMutate = require("main/utils/useBackend").useBackendMutation()
+      .mutate;
+
     renderComponent();
 
     const approveButtons = screen.getAllByRole("button", { name: "Approve" });
@@ -131,10 +140,16 @@ describe("AliasApprovalTable tests", () => {
       expect(mockToast).toHaveBeenCalledWith("Approved alias: ChillDude");
     });
 
-    expect(mockInvalidateQueries).toHaveBeenCalledWith("alias-approval");
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
+      "alias-approval",
+    );
   });
 
   test("reject button triggers mutation for second user", async () => {
+    const mockToast = require("react-toastify").toast;
+    const mockMutate = require("main/utils/useBackend").useBackendMutation()
+      .mutate;
+
     renderComponent();
 
     const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
@@ -146,11 +161,14 @@ describe("AliasApprovalTable tests", () => {
       expect(mockToast).toHaveBeenCalledWith("Rejected alias: CoolGuy");
     });
 
-    expect(mockInvalidateQueries).toHaveBeenCalledWith("alias-approval");
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
+      "alias-approval",
+    );
   });
 
   test("useBackendMutation is called with correct parameters", () => {
-    const { useBackendMutation } = require("main/utils/useBackend");
+    const useBackendMutation =
+      require("main/utils/useBackend").useBackendMutation;
     renderComponent();
 
     expect(useBackendMutation).toHaveBeenCalledWith(
@@ -161,7 +179,8 @@ describe("AliasApprovalTable tests", () => {
   });
 
   test("objectToAxiosParams function works correctly", () => {
-    const { useBackendMutation } = require("main/utils/useBackend");
+    const useBackendMutation =
+      require("main/utils/useBackend").useBackendMutation;
     renderComponent();
 
     const objectToAxiosParams = useBackendMutation.mock.calls[0][0];
