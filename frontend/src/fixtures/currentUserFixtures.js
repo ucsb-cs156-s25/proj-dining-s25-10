@@ -158,7 +158,7 @@ const apiCurrentUserFixtures = {
       hostedDomain: null,
       admin: false,
     },
-    roles: [],
+    roles: null,
   },
 };
 
