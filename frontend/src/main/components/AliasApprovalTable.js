@@ -17,7 +17,6 @@ export default function AliasApprovalTable({ users }) {
       console.error("Missing id or approved in mutation variables:", variables);
       return {};
     }
-
     return {
       url: "/api/currentUser/updateAliasModeration",
       method: "PUT",

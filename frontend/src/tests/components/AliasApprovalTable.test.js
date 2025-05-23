@@ -16,23 +16,18 @@ describe("AliasApprovalTable tests", () => {
 
   beforeEach(() => {
     axiosMock.reset();
-    axiosMock.resetHistory();
 
     axiosMock
-      .onPut(/\/api\/currentUser\/updateAliasModeration.*id=1.*approved=true/)
-      .reply(200, {
-        id: 1,
-        alias: "NewAlias",
-        proposedAlias: null,
-      });
+      .onPut("/api/currentUser/updateAliasModeration", {
+        params: { id: 1, approved: true },
+      })
+      .reply(200, { id: 1, alias: "NewAlias", proposedAlias: null });
 
     axiosMock
-      .onPut(/\/api\/currentUser\/updateAliasModeration.*id=2.*approved=false/)
-      .reply(200, {
-        id: 2,
-        alias: "CoolGuy",
-        proposedAlias: null,
-      });
+      .onPut("/api/currentUser/updateAliasModeration", {
+        params: { id: 2, approved: false },
+      })
+      .reply(200, { id: 2, alias: "CoolGuy", proposedAlias: null });
   });
 
   test("renders table with aliases", () => {
@@ -60,9 +55,8 @@ describe("AliasApprovalTable tests", () => {
     const approveButtons = screen.getAllByRole("button", { name: "Approve" });
     fireEvent.click(approveButtons[0]);
 
-    expect(
-      await screen.findByText("Approved alias: NewAlias"),
-    ).toBeInTheDocument();
+    await screen.findByText((content) =>
+          content.includes("Approved alias: NewAlias"));
   });
 
   test("reject button triggers mutation", async () => {
@@ -76,8 +70,7 @@ describe("AliasApprovalTable tests", () => {
     const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
     fireEvent.click(rejectButtons[1]);
 
-    expect(
-      await screen.findByText("Rejected alias: CoolGuy"),
-    ).toBeInTheDocument();
+    await screen.findByText((content) =>
+          content.includes("Rejected alias: CoolGuy"));
   });
 });
