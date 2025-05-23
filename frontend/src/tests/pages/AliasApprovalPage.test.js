@@ -1,37 +1,78 @@
-import { render, screen } from "@testing-library/react";
-import AliasApprovalPage from "main/pages/AliasApprovalPage";
+import { render, screen, fireEvent } from "@testing-library/react";
+import AliasApprovalTable from "main/components/AliasApprovalTable";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { MemoryRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
-describe("AliasApprovalPage tests", () => {
+describe("AliasApprovalTable tests", () => {
   const queryClient = new QueryClient();
   const axiosMock = new AxiosMockAdapter(axios);
 
   const sampleUsers = [
-    { id: 1, alias: "Foo", proposedAlias: "Bar" },
-    { id: 2, alias: "Boo", proposedAlias: "Baz" },
+    { id: 1, alias: "OldAlias", proposedAlias: "NewAlias" },
+    { id: 2, alias: "CoolGuy", proposedAlias: "ChillDude" },
   ];
 
   beforeEach(() => {
     axiosMock.reset();
     axiosMock
-      .onGet("/api/admin/usersWithProposedAlias")
-      .reply(200, sampleUsers);
+      .onPut("/api/currentUser/updateAliasModeration", {
+        params: { id: 1, approved: true },
+      })
+      .reply(200, {
+        id: 1,
+        alias: "NewAlias",
+        proposedAlias: null,
+      });
+
+    axiosMock
+      .onPut("/api/currentUser/updateAliasModeration", {
+        params: { id: 2, approved: false },
+      })
+      .reply(200, {
+        id: 2,
+        alias: "CoolGuy",
+        proposedAlias: null,
+      });
   });
 
-  test("renders AliasApprovalPage and loads users", async () => {
+  function renderComponent() {
     render(
       <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <AliasApprovalPage />
-        </MemoryRouter>
-      </QueryClientProvider>,
+        <ToastContainer />
+        <AliasApprovalTable users={sampleUsers} />
+      </QueryClientProvider>
     );
+  }
 
-    await screen.findByText("Alias Approval");
-    expect(screen.getByText("Foo")).toBeInTheDocument();
-    expect(screen.getByText("Bar")).toBeInTheDocument();
+  test("renders table with aliases", () => {
+    renderComponent();
+    expect(screen.getByText("OldAlias")).toBeInTheDocument();
+    expect(screen.getByText("NewAlias")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Approve" }).length).toBe(2);
+    expect(screen.getAllByRole("button", { name: "Reject" }).length).toBe(2);
+  });
+
+  test("approve button triggers mutation", async () => {
+    renderComponent();
+    const approveButtons = screen.getAllByRole("button", { name: "Approve" });
+    fireEvent.click(approveButtons[0]);
+    expect(
+      await screen.findByText((content) =>
+        content.includes("Approved alias: NewAlias")
+      )
+    ).toBeInTheDocument();
+  });
+
+  test("reject button triggers mutation", async () => {
+    renderComponent();
+    const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
+    fireEvent.click(rejectButtons[1]);
+    expect(
+      await screen.findByText((content) =>
+        content.includes("Rejected alias: CoolGuy")
+      )
+    ).toBeInTheDocument();
   });
 });
