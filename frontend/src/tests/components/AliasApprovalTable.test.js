@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import AliasApprovalTable from "main/components/AliasApprovalTable";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
@@ -16,6 +16,8 @@ describe("AliasApprovalTable tests", () => {
 
   beforeEach(() => {
     axiosMock.reset();
+    axiosMock.resetHistory();
+
     axiosMock
       .onPut(/\/api\/currentUser\/updateAliasModeration.*id=1.*approved=true/)
       .reply(200, {
@@ -43,8 +45,8 @@ describe("AliasApprovalTable tests", () => {
 
     expect(screen.getByText("OldAlias")).toBeInTheDocument();
     expect(screen.getByText("NewAlias")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Approve" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Reject" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Approve" }).length).toBe(2);
+    expect(screen.getAllByRole("button", { name: "Reject" }).length).toBe(2);
   });
 
   test("approve button triggers mutation", async () => {
@@ -58,9 +60,9 @@ describe("AliasApprovalTable tests", () => {
     const approveButtons = screen.getAllByRole("button", { name: "Approve" });
     fireEvent.click(approveButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.getByText("Approved alias: NewAlias")).toBeInTheDocument();
-    });
+    expect(
+      await screen.findByText("Approved alias: NewAlias"),
+    ).toBeInTheDocument();
   });
 
   test("reject button triggers mutation", async () => {
@@ -74,8 +76,8 @@ describe("AliasApprovalTable tests", () => {
     const rejectButtons = screen.getAllByRole("button", { name: "Reject" });
     fireEvent.click(rejectButtons[1]);
 
-    await waitFor(() => {
-      expect(screen.getByText("Rejected alias: CoolGuy")).toBeInTheDocument();
-    });
+    expect(
+      await screen.findByText("Rejected alias: CoolGuy"),
+    ).toBeInTheDocument();
   });
 });
