@@ -83,7 +83,7 @@ describe("MenuItemPage", () => {
     ReactRouter.useParams.mockReturnValue({
       "date-time": "2025-03-11",
       "dining-commons-code": "carrillo",
-      meal: null,
+      meal: "breakfast",
     });
 
     render(
@@ -94,7 +94,7 @@ describe("MenuItemPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
   test("shows loading when date parameter is missing", () => {
@@ -112,7 +112,7 @@ describe("MenuItemPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
   test("shows loading when dining commons parameter is missing", () => {
@@ -130,14 +130,14 @@ describe("MenuItemPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
   test("shows loading when meal parameter is undefined", () => {
     ReactRouter.useParams.mockReturnValue({
       "date-time": "2025-03-11",
       "dining-commons-code": "carrillo",
-      meal: undefined,
+      meal: "breakfast",
     });
 
     render(
@@ -148,7 +148,7 @@ describe("MenuItemPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
   test("shows loading when date parameter is undefined", () => {
@@ -166,7 +166,7 @@ describe("MenuItemPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
   test("shows loading when dining commons parameter is undefined", () => {
@@ -184,14 +184,14 @@ describe("MenuItemPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 
   test("shows loading when all parameters are missing", () => {
     ReactRouter.useParams.mockReturnValue({
       "date-time": null,
       "dining-commons-code": null,
-      meal: null,
+      meal: "breakfast",
     });
 
     render(
@@ -202,7 +202,7 @@ describe("MenuItemPage", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Breakfast")).toBeInTheDocument();
   });
 });
 

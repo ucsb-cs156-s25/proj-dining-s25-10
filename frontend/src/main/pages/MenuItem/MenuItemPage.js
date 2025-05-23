@@ -24,14 +24,6 @@ export default function MenuItemPage() {
     [],
   );
 
-  if (!meal || !date || !diningCommons) {
-    return (
-      <BasicLayout>
-        <h2>Loading...</h2>
-      </BasicLayout>
-    );
-  }
-
   return (
     <BasicLayout>
       <h2>{meal.at(0).toUpperCase() + meal.substring(1)}</h2>

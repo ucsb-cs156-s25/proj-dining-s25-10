@@ -20,15 +20,6 @@ export default function MealTimesPage() {
     [],
   );
 
-  if (!dateTime || !diningCommonsCode) {
-    return (
-      <BasicLayout>
-        <div className="pt-2">
-          <h1>Loading...</h1>
-        </div>
-      </BasicLayout>
-    );
-  }
 
   return (
     <BasicLayout>

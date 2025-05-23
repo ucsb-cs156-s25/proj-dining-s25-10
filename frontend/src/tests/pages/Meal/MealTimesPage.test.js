@@ -97,7 +97,7 @@ describe("MealTimesPage tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Meals at portola for")).toBeInTheDocument();
   });
 
   test("shows loading when diningCommonsCode is missing", () => {
@@ -114,7 +114,7 @@ describe("MealTimesPage tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Meals at for 2024-11-25")).toBeInTheDocument();
   });
 
   test("shows loading when both dateTime and diningCommonsCode are missing", () => {
@@ -131,7 +131,7 @@ describe("MealTimesPage tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Meals at for")).toBeInTheDocument();
   });
 
   test("shows loading when dateTime is undefined", () => {
@@ -148,7 +148,7 @@ describe("MealTimesPage tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Meals at portola for")).toBeInTheDocument();
   });
 
   test("shows loading when diningCommonsCode is undefined", () => {
@@ -165,6 +165,6 @@ describe("MealTimesPage tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Meals at for 2024-11-25")).toBeInTheDocument();
   });
 });
