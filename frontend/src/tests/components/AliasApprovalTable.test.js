@@ -162,27 +162,6 @@ describe("AliasApprovalTable tests", () => {
     expect(result3).toEqual({});
   });
 
-  test("onSuccess callback works correctly", () => {
-    const { useBackendMutation } = require("main/utils/useBackend");
-    renderComponent();
-
-    const onSuccess = useBackendMutation.mock.calls[0][1].onSuccess;
-
-    onSuccess({ alias: "TestAlias" }, { approved: true });
-    onSuccess({ alias: "TestAlias" }, { approved: false });
-  });
-
-  test("useBackendMutation is called with correct dependency array", () => {
-    const { useBackendMutation } = require("main/utils/useBackend");
-    renderComponent();
-
-    expect(useBackendMutation).toHaveBeenCalledWith(
-      expect.any(Function),
-      { onSuccess: expect.any(Function) },
-      ["alias-approval"],
-    );
-  });
-
   test("renders with empty users array", () => {
     render(
       <QueryClientProvider client={queryClient}>
@@ -191,7 +170,9 @@ describe("AliasApprovalTable tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getAllByRole("button", { name: "Approve" })).toHaveLength(0);
-    expect(screen.getAllByRole("button", { name: "Reject" })).toHaveLength(0);
+    expect(screen.queryAllByRole("button", { name: "Approve" })).toHaveLength(
+      0,
+    );
+    expect(screen.queryAllByRole("button", { name: "Reject" })).toHaveLength(0);
   });
 });

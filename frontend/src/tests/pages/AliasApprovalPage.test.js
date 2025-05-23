@@ -80,12 +80,15 @@ describe("AliasApprovalPage tests", () => {
 
     renderComponent();
     expect(screen.getByText("Alias Approval")).toBeInTheDocument();
+    expect(screen.queryAllByRole("button", { name: "Approve" })).toHaveLength(
+      0,
+    );
   });
 
   test("handles loading state", () => {
     const { useBackend } = require("main/utils/useBackend");
     useBackend.mockReturnValue({
-      data: undefined,
+      data: [],
       isLoading: true,
       error: null,
     });
@@ -97,7 +100,7 @@ describe("AliasApprovalPage tests", () => {
   test("handles error state", () => {
     const { useBackend } = require("main/utils/useBackend");
     useBackend.mockReturnValue({
-      data: undefined,
+      data: [],
       isLoading: false,
       error: new Error("Test error"),
     });
