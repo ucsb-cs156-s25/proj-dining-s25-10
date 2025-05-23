@@ -56,7 +56,8 @@ describe("AliasApprovalTable tests", () => {
     fireEvent.click(approveButtons[0]);
 
     await screen.findByText((content) =>
-          content.includes("Approved alias: NewAlias"));
+      content.includes("Approved alias: NewAlias"),
+    );
   });
 
   test("reject button triggers mutation", async () => {
@@ -71,6 +72,7 @@ describe("AliasApprovalTable tests", () => {
     fireEvent.click(rejectButtons[1]);
 
     await screen.findByText((content) =>
-          content.includes("Rejected alias: CoolGuy"));
+      content.includes("Rejected alias: CoolGuy"),
+    );
   });
 });
