@@ -108,4 +108,27 @@ describe("AliasApprovalPage tests", () => {
     renderComponent();
     expect(screen.getByText("Alias Approval")).toBeInTheDocument();
   });
+
+  test("useBackend is called with correct parameters", () => {
+    const { useBackend } = require("main/utils/useBackend");
+    renderComponent();
+
+    expect(useBackend).toHaveBeenCalledWith(
+      ["/api/admin/usersWithProposedAlias"],
+      { method: "GET", url: "/api/admin/usersWithProposedAlias" },
+      [],
+    );
+  });
+
+  test("useBackend hook parameters are correct", () => {
+    const { useBackend } = require("main/utils/useBackend");
+    renderComponent();
+
+    const [queryKey, axiosConfig, initialData] = useBackend.mock.calls[0];
+
+    expect(queryKey).toEqual(["/api/admin/usersWithProposedAlias"]);
+    expect(axiosConfig.method).toBe("GET");
+    expect(axiosConfig.url).toBe("/api/admin/usersWithProposedAlias");
+    expect(initialData).toEqual([]);
+  });
 });

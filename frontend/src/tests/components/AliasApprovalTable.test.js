@@ -175,4 +175,73 @@ describe("AliasApprovalTable tests", () => {
     );
     expect(screen.queryAllByRole("button", { name: "Reject" })).toHaveLength(0);
   });
+
+  test("objectToAxiosParams returns correct object structure", () => {
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    const objectToAxiosParams = useBackendMutation.mock.calls[0][0];
+    const result = objectToAxiosParams({ id: 1, approved: true });
+
+    expect(result.url).toBe("/api/currentUser/updateAliasModeration");
+    expect(result.method).toBe("PUT");
+    expect(result.params.id).toBe(1);
+    expect(result.params.approved).toBe(true);
+  });
+
+  test("onSuccess callback handles both approved and rejected cases", () => {
+    const { toast } = require("react-toastify");
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    const onSuccess = useBackendMutation.mock.calls[0][1].onSuccess;
+
+    onSuccess({ alias: "TestApproved" }, { approved: true });
+    expect(toast).toHaveBeenCalledWith("Approved alias: TestApproved");
+
+    onSuccess({ alias: "TestRejected" }, { approved: false });
+    expect(toast).toHaveBeenCalledWith("Rejected alias: TestRejected");
+  });
+
+  test("table headers are rendered correctly", () => {
+    renderComponent();
+
+    expect(
+      screen.getByRole("columnheader", { name: "Alias" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "Proposed Alias" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "Approve" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "Reject" }),
+    ).toBeInTheDocument();
+  });
+
+  test("component renders table correctly", () => {
+    renderComponent();
+    const table = screen.getByRole("table");
+    expect(table).toBeInTheDocument();
+  });
+
+  test("useBackendMutation dependency array is correct", () => {
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    const deps = useBackendMutation.mock.calls[0][2];
+    expect(deps).toEqual(["alias-approval"]);
+  });
+
+  test("invalidateQueries is called with correct key", () => {
+    renderComponent();
+
+    const approveButtons = screen.getAllByRole("button", { name: "Approve" });
+    fireEvent.click(approveButtons[0]);
+
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith(
+      "alias-approval",
+    );
+  });
 });
