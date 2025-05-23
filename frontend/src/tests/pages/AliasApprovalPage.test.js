@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import AliasApprovalPage from "main/pages/AliasApprovalPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
@@ -16,7 +16,9 @@ describe("AliasApprovalPage tests", () => {
 
   beforeEach(() => {
     axiosMock.reset();
-    axiosMock.onGet("/api/admin/usersWithProposedAlias").reply(200, sampleUsers);
+    axiosMock
+      .onGet("/api/admin/usersWithProposedAlias")
+      .reply(200, sampleUsers);
   });
 
   test("renders AliasApprovalPage and loads users", async () => {
@@ -28,7 +30,7 @@ describe("AliasApprovalPage tests", () => {
       </QueryClientProvider>,
     );
 
-    await waitFor(() => expect(screen.getByText("Alias Approval")).toBeInTheDocument());
+    await screen.findByText("Alias Approval");
     expect(screen.getByText("Foo")).toBeInTheDocument();
     expect(screen.getByText("Bar")).toBeInTheDocument();
   });

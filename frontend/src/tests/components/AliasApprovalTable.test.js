@@ -2,8 +2,6 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AliasApprovalTable from "main/components/AliasApprovalTable";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
-import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
-import { currentUser } from "main/utils/currentUser";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
@@ -18,16 +16,21 @@ describe("AliasApprovalTable tests", () => {
 
   beforeEach(() => {
     axiosMock.reset();
-    axiosMock.onPut("/api/currentUser/updateAliasModeration", { id: 1, approved: true }).reply(200, {
-      id: 1,
-      alias: "NewAlias",
-      proposedAlias: null,
-    });
-    axiosMock.onPut("/api/currentUser/updateAliasModeration", { id: 2, approved: false }).reply(200, {
-      id: 2,
-      alias: "CoolGuy",
-      proposedAlias: null,
-    });
+    axiosMock
+      .onPut(/\/api\/currentUser\/updateAliasModeration.*id=1.*approved=true/)
+      .reply(200, {
+        id: 1,
+        alias: "NewAlias",
+        proposedAlias: null,
+      });
+
+    axiosMock
+      .onPut(/\/api\/currentUser\/updateAliasModeration.*id=2.*approved=false/)
+      .reply(200, {
+        id: 2,
+        alias: "CoolGuy",
+        proposedAlias: null,
+      });
   });
 
   test("renders table with aliases", () => {
