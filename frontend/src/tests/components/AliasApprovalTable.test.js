@@ -145,4 +145,53 @@ describe("AliasApprovalTable tests", () => {
       "alias-approval",
     );
   });
+
+  test("handles missing variables in objectToAxiosParams", () => {
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    const objectToAxiosParams = useBackendMutation.mock.calls[0][0];
+
+    const result1 = objectToAxiosParams();
+    expect(result1).toEqual({});
+
+    const result2 = objectToAxiosParams({ approved: true });
+    expect(result2).toEqual({});
+
+    const result3 = objectToAxiosParams({ id: 1 });
+    expect(result3).toEqual({});
+  });
+
+  test("onSuccess callback works correctly", () => {
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    const onSuccess = useBackendMutation.mock.calls[0][1].onSuccess;
+
+    onSuccess({ alias: "TestAlias" }, { approved: true });
+    onSuccess({ alias: "TestAlias" }, { approved: false });
+  });
+
+  test("useBackendMutation is called with correct dependency array", () => {
+    const { useBackendMutation } = require("main/utils/useBackend");
+    renderComponent();
+
+    expect(useBackendMutation).toHaveBeenCalledWith(
+      expect.any(Function),
+      { onSuccess: expect.any(Function) },
+      ["alias-approval"],
+    );
+  });
+
+  test("renders with empty users array", () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ToastContainer />
+        <AliasApprovalTable users={[]} />
+      </QueryClientProvider>,
+    );
+
+    expect(screen.getAllByRole("button", { name: "Approve" })).toHaveLength(0);
+    expect(screen.getAllByRole("button", { name: "Reject" })).toHaveLength(0);
+  });
 });

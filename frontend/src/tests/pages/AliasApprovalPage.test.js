@@ -69,4 +69,40 @@ describe("AliasApprovalPage tests", () => {
     expect(screen.getAllByRole("button", { name: "Approve" })).toHaveLength(2);
     expect(screen.getAllByRole("button", { name: "Reject" })).toHaveLength(2);
   });
+
+  test("handles empty users data", () => {
+    const { useBackend } = require("main/utils/useBackend");
+    useBackend.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+
+    renderComponent();
+    expect(screen.getByText("Alias Approval")).toBeInTheDocument();
+  });
+
+  test("handles loading state", () => {
+    const { useBackend } = require("main/utils/useBackend");
+    useBackend.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      error: null,
+    });
+
+    renderComponent();
+    expect(screen.getByText("Alias Approval")).toBeInTheDocument();
+  });
+
+  test("handles error state", () => {
+    const { useBackend } = require("main/utils/useBackend");
+    useBackend.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: new Error("Test error"),
+    });
+
+    renderComponent();
+    expect(screen.getByText("Alias Approval")).toBeInTheDocument();
+  });
 });
