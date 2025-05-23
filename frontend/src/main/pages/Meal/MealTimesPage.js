@@ -20,7 +20,6 @@ export default function MealTimesPage() {
     [],
   );
 
-
   return (
     <BasicLayout>
       <div className="pt-2">
