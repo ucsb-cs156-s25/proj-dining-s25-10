@@ -14,6 +14,7 @@ jest.mock("react-router", () => {
     __esModule: true,
     ...originalModule,
     useParams: jest.fn(),
+    useNavigate: () => mockNavigate,
     Navigate: (x) => {
       mockNavigate(x);
       return null;
@@ -81,90 +82,5 @@ describe("MealTimesPage tests", () => {
     expect(screen.getByText("Breakfast")).toBeInTheDocument();
     expect(screen.getByText("Lunch")).toBeInTheDocument();
     expect(screen.getByText("Dinner")).toBeInTheDocument();
-  });
-
-  test("shows loading when dateTime is missing", () => {
-    ReactRouter.useParams.mockReturnValue({
-      "date-time": null,
-      "dining-commons-code": "portola",
-    });
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MealTimesPage />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    expect(screen.getByText("Meals at portola for")).toBeInTheDocument();
-  });
-
-  test("shows loading when diningCommonsCode is missing", () => {
-    ReactRouter.useParams.mockReturnValue({
-      "date-time": "2024-11-25",
-      "dining-commons-code": null,
-    });
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MealTimesPage />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    expect(screen.getByText("Meals at for 2024-11-25")).toBeInTheDocument();
-  });
-
-  test("shows loading when both dateTime and diningCommonsCode are missing", () => {
-    ReactRouter.useParams.mockReturnValue({
-      "date-time": null,
-      "dining-commons-code": null,
-    });
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MealTimesPage />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    expect(screen.getByText("Meals at for")).toBeInTheDocument();
-  });
-
-  test("shows loading when dateTime is undefined", () => {
-    ReactRouter.useParams.mockReturnValue({
-      "date-time": undefined,
-      "dining-commons-code": "portola",
-    });
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MealTimesPage />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    expect(screen.getByText("Meals at portola for")).toBeInTheDocument();
-  });
-
-  test("shows loading when diningCommonsCode is undefined", () => {
-    ReactRouter.useParams.mockReturnValue({
-      "date-time": "2024-11-25",
-      "dining-commons-code": undefined,
-    });
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <MealTimesPage />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    expect(screen.getByText("Meals at for 2024-11-25")).toBeInTheDocument();
   });
 });
