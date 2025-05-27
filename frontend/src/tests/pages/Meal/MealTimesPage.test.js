@@ -1,21 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import MealTimesPage from "main/pages/Meal/MealTimesPage";
 import { mealFixtures } from "fixtures/mealFixtures";
 import AxiosMockAdapter from "axios-mock-adapter";
 import axios from "axios";
+import * as ReactRouter from "react-router";
 
 const mockNavigate = jest.fn();
-jest.mock("react-router-dom", () => {
-  const originalModule = jest.requireActual("react-router-dom");
+jest.mock("react-router", () => {
+  const originalModule = jest.requireActual("react-router");
   return {
     __esModule: true,
     ...originalModule,
-    useParams: () => ({
-      "date-time": "2024-11-25",
-      "dining-commons-code": "portola",
-    }),
+    useParams: jest.fn(),
+    useNavigate: () => mockNavigate,
     Navigate: (x) => {
       mockNavigate(x);
       return null;
@@ -38,7 +37,16 @@ describe("MealTimesPage tests", () => {
       .reply(200, mealFixtures.threeMeals);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test("renders without crashing", () => {
+    ReactRouter.useParams.mockReturnValue({
+      "date-time": "2024-11-25",
+      "dining-commons-code": "portola",
+    });
+
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter initialEntries={["/diningcommons/2024-11-25/portola"]}>
@@ -49,6 +57,11 @@ describe("MealTimesPage tests", () => {
   });
 
   test("displays correct information in the table", async () => {
+    ReactRouter.useParams.mockReturnValue({
+      "date-time": "2024-11-25",
+      "dining-commons-code": "portola",
+    });
+
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter initialEntries={["/diningcommons/2024-11-25/portola"]}>
