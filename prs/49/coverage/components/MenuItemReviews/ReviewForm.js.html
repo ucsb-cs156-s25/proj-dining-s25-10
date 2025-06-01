@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>14/14</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Functions</span>
                 <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>8/8</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>3/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -182,7 +182,8 @@
 <a name='L117'></a><a href='#L117'>117</a>
 <a name='L118'></a><a href='#L118'>118</a>
 <a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -198,14 +199,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -217,7 +216,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,7 +227,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -250,6 +247,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -262,7 +260,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -311,7 +313,7 @@ function ReviewForm({
   initialContents,
   submitAction,
   buttonLabel = "Create",
-  hideItemId = false,
+  itemName = "", // New prop for the item name
 }) {
   const {
     register,
@@ -320,33 +322,6 @@ function ReviewForm({
   } = useForm({ defaultValues: initialContents || {} });
 &nbsp;
   const navigate = useNavigate();
-&nbsp;
-  const renderItemInput = () =&gt; {
-    if (hideItemId) return null;
-&nbsp;
-    return (
-      &lt;Form.Group className="mb-3"&gt;
-        &lt;Form.Label htmlFor="itemId"&gt;Menu Item ID&lt;/Form.Label&gt;
-        &lt;Form.Control
-          id="itemId"
-          type="number"
-          min="1"
-          step="1"
-          isInvalid={Boolean(errors.itemId)}
-          {...register("itemId", {
-            required: "Menu item ID is required.",
-            validate: (value) =&gt;
-              Number.isInteger(Number(value)) &amp;&amp; Number(value) &gt; 0
-                ? true
-                : "Item ID must be a positive integer.",
-          })}
-        /&gt;
-        &lt;Form.Control.Feedback type="invalid"&gt;
-          {errors.itemId?.message}
-        &lt;/Form.Control.Feedback&gt;
-      &lt;/Form.Group&gt;
-    );
-  };
 &nbsp;
   return (
     &lt;Form onSubmit={handleSubmit(submitAction)}&gt;
@@ -363,8 +338,19 @@ function ReviewForm({
         &lt;/Form.Group&gt;
       )}
 &nbsp;
-      {renderItemInput()}
+      {/* Disabled item name field */}
+      &lt;Form.Group className="mb-3"&gt;
+        &lt;Form.Label htmlFor="itemName"&gt;Item Being Reviewed&lt;/Form.Label&gt;
+        &lt;Form.Control
+          id="itemName"
+          type="text"
+          value={itemName}
+          disabled
+          placeholder="Item name will be displayed here"
+        /&gt;
+      &lt;/Form.Group&gt;
 &nbsp;
+      {/* Stars rating */}
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="stars"&gt;Stars&lt;/Form.Label&gt;
         &lt;Form.Control
@@ -389,6 +375,7 @@ function ReviewForm({
         &lt;/Form.Control.Feedback&gt;
       &lt;/Form.Group&gt;
 &nbsp;
+      {/* Comments field */}
       &lt;Form.Group className="mb-3"&gt;
         &lt;Form.Label htmlFor="comments"&gt;
           Comments &lt;span className="text-muted"&gt;(optional)&lt;/span&gt;
@@ -411,6 +398,22 @@ function ReviewForm({
         &lt;/Form.Control.Feedback&gt;
       &lt;/Form.Group&gt;
 &nbsp;
+      {/* Date-time picker for when item was served */}
+      &lt;Form.Group className="mb-3"&gt;
+        &lt;Form.Label htmlFor="dateServed"&gt;Date &amp; Time Served&lt;/Form.Label&gt;
+        &lt;Form.Control
+          id="dateServed"
+          type="datetime-local"
+          isInvalid={Boolean(errors.dateServed)}
+          {...register("dateServed", {
+            required: "Date and time served is required.",
+          })}
+        /&gt;
+        &lt;Form.Control.Feedback type="invalid"&gt;
+          {errors.dateServed?.message}
+        &lt;/Form.Control.Feedback&gt;
+      &lt;/Form.Group&gt;
+&nbsp;
       &lt;Button type="submit"&gt;{buttonLabel}&lt;/Button&gt;
       &lt;Button variant="secondary" className="ms-2" onClick={() =&gt; navigate(-1)}&gt;
         Cancel
@@ -427,7 +430,7 @@ export default ReviewForm;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-28T00:21:26.040Z
+                at 2025-06-01T00:30:37.857Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
