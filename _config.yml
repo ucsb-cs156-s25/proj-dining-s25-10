@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-s25/proj-dining-s25-10
 owner: ucsb-cs156-s25
 repo_name: proj-dining-s25-10
-pull_requests: [{"author":{"id":"U_kgDOCNoKBA","is_bot":false,"login":"junjiel123","name":"Junjie Liu"},"headRefName":"Alias-Approval-Table","number":49,"title":"Added Alias Approval Table to approve alias update requests","url":"https://github.com/ucsb-cs156-s25/proj-dining-s25-10/pull/49"},{"author":{"id":"MDQ6VXNlcjkwNzI5MjA4","is_bot":false,"login":"mihir-r-kondapalli","name":"Mihir Kondapalli"},"headRefName":"mk-review_page","number":48,"title":"mk - added review table feature","url":"https://github.com/ucsb-cs156-s25/proj-dining-s25-10/pull/48"}]
+pull_requests: [{"author":{"id":"U_kgDOCNoKBA","is_bot":false,"login":"junjiel123","name":"Junjie Liu"},"headRefName":"Alias-Approval-Table","number":49,"title":"Added Alias Approval Table to approve alias update requests","url":"https://github.com/ucsb-cs156-s25/proj-dining-s25-10/pull/49"}]
