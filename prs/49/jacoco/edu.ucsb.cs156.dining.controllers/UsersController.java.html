@@ -46,7 +46,7 @@ import java.time.LocalDate;
      * @throws JsonProcessingException if there is an error processing the JSON
      */
     @Operation(summary= &quot;Get a list of all users&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')&quot;)
     @GetMapping(&quot;/admin/users&quot;)
     public ResponseEntity&lt;String&gt; users()
             throws JsonProcessingException {
@@ -63,7 +63,7 @@ import java.time.LocalDate;
      * @throws JsonProcessingException if there is an error processing the JSON
      */
     @Operation(summary = &quot;Get a list of all users with a proposed alias&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')&quot;)
     @GetMapping(&quot;/admin/usersWithProposedAlias&quot;)
     public ResponseEntity&lt;String&gt; getUsersWithProposedAlias()
             throws JsonProcessingException {
@@ -101,30 +101,29 @@ import java.time.LocalDate;
      * @param approved the new moderation status 
      * @return the updated user
      */
-    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')&quot;)
     @PutMapping(&quot;/currentUser/updateAliasModeration&quot;)
     public User updateAliasModeration(
             @RequestParam long id, 
             @RequestParam Boolean approved) {
         
-<span class="fc" id="L110">                System.out.println(&quot;Received id: &quot; + id + &quot;, approved: &quot; + approved);</span>
-<span class="fc" id="L111">        User user = userRepository.findById(id)</span>
-<span class="fc" id="L112">            .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L110">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L111">            .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
         
 
-<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (approved) {</span>
-<span class="fc" id="L116">            user.setAlias(user.getProposedAlias());  </span>
-<span class="fc" id="L117">            user.setStatus(ModerationStatus.APPROVED);</span>
-<span class="fc" id="L118">            user.setDateApproved(LocalDate.now());</span>
-<span class="fc" id="L119">            user.setProposedAlias(null);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (approved) {</span>
+<span class="fc" id="L115">            user.setAlias(user.getProposedAlias());  </span>
+<span class="fc" id="L116">            user.setStatus(ModerationStatus.APPROVED);</span>
+<span class="fc" id="L117">            user.setDateApproved(LocalDate.now());</span>
+<span class="fc" id="L118">            user.setProposedAlias(null);</span>
         } else {
-<span class="fc" id="L121">            user.setStatus(ModerationStatus.REJECTED);</span>
-<span class="fc" id="L122">            user.setProposedAlias(null);</span>
+<span class="fc" id="L120">            user.setStatus(ModerationStatus.REJECTED);</span>
+<span class="fc" id="L121">            user.setProposedAlias(null);</span>
         }
         
-<span class="fc" id="L125">        userRepository.save(user);</span>
+<span class="fc" id="L124">        userRepository.save(user);</span>
 
-<span class="fc" id="L127">        return user;</span>
+<span class="fc" id="L126">        return user;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
